@@ -1,22 +1,23 @@
 import { GoogleAdsServiceClient, protos } from 'google-ads-node';
 import { CallOptions } from 'google-gax';
-import R from 'ramda';
+import { mergeDeepRight } from 'ramda';
 
-import { Service } from './service';
-import { CustomerOptions } from './types';
+import { Service } from './Service';
+import { CustomerOptions, ServiceOptions } from './types';
+import { getGoogleAdsError } from './utils';
 
 export class GoogleAds extends Service {
   private customerOptions: CustomerOptions;
 
-  constructor(developerToken: string, customer: CustomerOptions) {
-    super(developerToken);
+  constructor(options: ServiceOptions, customer: CustomerOptions) {
+    super(options);
 
     this.customerOptions = customer;
   }
 
-  get callHeaders(): Record<string, string> {
+  protected get callHeaders(): Record<string, string> {
     const headers: Record<string, string> = {
-      'developer-token': this.developerToken,
+      'developer-token': this.options.developer_token,
     };
 
     if (this.customerOptions?.login_customer_id) {
@@ -31,16 +32,14 @@ export class GoogleAds extends Service {
   }
 
   private transformRequest(request: any, options: CallOptions = {}) {
-    const req = R.mergeDeepWith(
-      R.concat,
+    const req = mergeDeepRight(
       {
         customer_id: this.customerOptions.customer_id,
       },
       request,
     );
 
-    const opts = R.mergeDeepWith(
-      R.concat,
+    const opts = mergeDeepRight(
       {
         otherArgs: {
           headers: this.callHeaders,
@@ -62,7 +61,9 @@ export class GoogleAds extends Service {
 
     const data = this.transformRequest(request, options);
 
-    const [response] = await client.search(...data);
+    const [response] = await client.search(...data).catch((error) => {
+      throw getGoogleAdsError(error);
+    });
 
     return response;
   }
@@ -79,8 +80,29 @@ export class GoogleAds extends Service {
 
     const stream = client.searchStream(...data);
 
-    for await (const response of stream) {
-      yield response;
+    try {
+      for await (const response of stream) {
+        yield response;
+      }
+    } catch (error: any) {
+      throw getGoogleAdsError(error as unknown as Error);
     }
+  }
+
+  async mutate(
+    request: protos.google.ads.googleads.v12.services.IMutateGoogleAdsRequest = {},
+    options: CallOptions = {},
+  ) {
+    const client: GoogleAdsServiceClient = this.loadService(
+      'GoogleAdsServiceClient',
+    );
+
+    const data = this.transformRequest(request, options);
+
+    const [response] = await client.mutate(...data).catch((error) => {
+      throw getGoogleAdsError(error);
+    });
+
+    return response;
   }
 }

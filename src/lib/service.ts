@@ -1,31 +1,30 @@
-import { getCredentials } from './auth';
-import { AllServices, CustomerOptions, ServiceName } from './types';
+import { ServiceProvider } from './ServiceProvider';
+import { AllServices, ServiceName, ServiceOptions } from './types';
+import { getCredentials } from './utils';
 
-export interface IService {
-  get callHeaders(): Record<string, string>;
-}
-
-export class Service implements IService {
+export class Service extends ServiceProvider {
   // @ts-expect-error All fields don't need to be set here
   private cachedClients: Record<ServiceName, AllServices> = {};
 
-  public developerToken: string;
+  protected options: ServiceOptions;
 
-  constructor(developerToken: string) {
-    this.developerToken = developerToken;
+  constructor(options: ServiceOptions) {
+    super();
+
+    this.options = options;
   }
 
-  get callHeaders(): Record<string, string> {
+  protected get callHeaders(): Record<string, string> {
     throw new Error('Method not implemented.');
   }
 
-  loadService<T = AllServices>(serviceName: ServiceName): T {
+  protected loadService<T = AllServices>(serviceName: ServiceName): T {
     if (this.cachedClients[serviceName])
       return this.cachedClients[serviceName] as T;
 
     const { [serviceName]: ProtoService } = require('google-ads-node');
 
-    const credentials = getCredentials();
+    const credentials = getCredentials(this.options.auth);
 
     const client = new ProtoService({
       sslCreds: credentials,

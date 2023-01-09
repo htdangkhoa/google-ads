@@ -7,7 +7,6 @@
     "dev": "ts-node -r dotenv/config src/index.ts"
   },
   "dependencies": {
-    "axios": "^1.2.2",
     "google-ads-node": "^10.0.0",
     "google-gax": "^3.5.2",
     "ramda": "^0.28.0"

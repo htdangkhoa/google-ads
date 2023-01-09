@@ -1,9 +1,14 @@
 import allProtos from 'google-ads-node';
-
-export const VERSION = 'v12' as const;
+import { grpc } from 'google-gax';
+import { VERSION } from './constants';
 
 export type AllServices = Omit<typeof allProtos, typeof VERSION>;
 export type ServiceName = keyof Omit<typeof allProtos, typeof VERSION>;
+
+export interface ServiceOptions {
+  auth: grpc.OAuth2Client;
+  developer_token: string;
+}
 
 export interface CustomerOptions {
   customer_id: string;
