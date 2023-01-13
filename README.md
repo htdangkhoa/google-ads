@@ -55,7 +55,6 @@ const service = new GoogleAds(
 const customerClients = await service.search({
   query: `
     SELECT
-      customer_client.id,
       customer_client.descriptive_name,
       customer_client.resource_name,
       customer_client.client_customer,

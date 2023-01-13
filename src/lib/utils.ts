@@ -1,7 +1,5 @@
 import { grpc } from 'google-gax';
-import { errors, VERSION } from './constants';
-
-export const FAILURE_KEY = `google.ads.googleads.${VERSION}.errors.googleadsfailure-bin`;
+import { errors, FAILURE_KEY } from './constants';
 
 export const getCredentials = (authClient: grpc.OAuth2Client) => {
   const ssl = grpc.credentials.createSsl();
