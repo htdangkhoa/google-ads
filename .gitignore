@@ -106,3 +106,5 @@ dist
 sa.json
 
 build
+
+.DS_Store
