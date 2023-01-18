@@ -1,4 +1,4 @@
-import { CustomerServiceClient } from 'google-ads-node';
+import { CustomerServiceClient } from '../generated/google';
 import { Service } from './Service';
 import { getGoogleAdsError } from './utils';
 

@@ -22,7 +22,7 @@ export class Service extends ServiceProvider {
     if (this.cachedClients[serviceName])
       return this.cachedClients[serviceName] as T;
 
-    const { [serviceName]: ProtoService } = require('google-ads-node');
+    const { [serviceName]: ProtoService } = require('../generated/google');
 
     const credentials = getCredentials(this.options.auth);
 

@@ -1,4 +1,4 @@
-import { GoogleAdsServiceClient, protos } from 'google-ads-node';
+import { GoogleAdsServiceClient } from '../generated/google';
 import { CallOptions } from 'google-gax';
 import { mergeDeepRight } from 'ramda';
 

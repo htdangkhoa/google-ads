@@ -1,4 +1,4 @@
-import allProtos from 'google-ads-node';
+import allProtos from '../generated/google';
 import { grpc } from 'google-gax';
 import { VERSION } from './constants';
 

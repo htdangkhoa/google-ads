@@ -108,3 +108,7 @@ sa.json
 build
 
 .DS_Store
+
+generated
+
+googleapis

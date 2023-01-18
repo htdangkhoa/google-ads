@@ -4,23 +4,29 @@
   "license": "MIT",
   "main": "build/lib/index.js",
   "files": [
-    "build/lib"
+    "build/lib",
+    "build/generated"
   ],
   "scripts": {
     "prebuild": "rimraf build",
     "build": "tsc",
     "prerelease": "npm run build",
-    "release": "np"
+    "release": "np",
+    "generate": "./scripts/generate.sh"
   },
   "dependencies": {
+    "@protobuf-ts/grpc-transport": "^2.8.2",
+    "@protobuf-ts/plugin": "^2.8.2",
     "google-ads-node": "^10.0.0",
     "google-gax": "^3.5.2",
     "ramda": "^0.28.0"
   },
   "devDependencies": {
+    "@types/glob": "^8.0.0",
     "@types/node": "^18.11.18",
     "@types/ramda": "^0.28.20",
     "dotenv": "^16.0.3",
+    "glob": "^8.1.0",
     "googleapis": "^110.0.0",
     "np": "^7.6.3",
     "rimraf": "^4.1.0",
