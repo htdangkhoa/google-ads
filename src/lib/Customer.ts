@@ -1,34 +1,27 @@
+import { Metadata } from '@grpc/grpc-js';
+import { RpcMetadata } from '@protobuf-ts/runtime-rpc';
 import { CustomerServiceClient } from '../generated/google';
 import { Service } from './Service';
-import { getGoogleAdsError } from './utils';
 
 export class Customer extends Service {
-  protected get callHeaders(): Record<string, string> {
-    const headers = {
-      'developer-token': this.options.developer_token,
-    };
+  protected get callMetadata(): RpcMetadata {
+    const meta: RpcMetadata = {};
 
-    return headers;
+    meta['developer-token'] = this.options.developer_token;
+
+    return meta;
   }
 
-  async listAccessibleCustomers() {
+  listAccessibleCustomers() {
     const client: CustomerServiceClient = this.loadService(
       'CustomerServiceClient',
     );
 
-    const [response] = await client
-      .listAccessibleCustomers(
-        {},
-        {
-          otherArgs: {
-            headers: this.callHeaders,
-          },
-        },
-      )
-      .catch((error) => {
-        throw getGoogleAdsError(error);
-      });
-
-    return response;
+    return client.listAccessibleCustomers(
+      {},
+      {
+        meta: this.callMetadata,
+      },
+    );
   }
 }

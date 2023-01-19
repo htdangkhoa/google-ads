@@ -1,6 +1,6 @@
 import { google } from 'googleapis';
 
-import { GoogleAds } from '../lib';
+import { GoogleAds } from '../src/lib';
 
 const authClient = new google.auth.JWT({
   keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,

@@ -1,3 +1,6 @@
+import { GrpcTransport } from '@protobuf-ts/grpc-transport';
+import { RpcMetadata } from '@protobuf-ts/runtime-rpc';
+
 import { ServiceProvider } from './ServiceProvider';
 import { AllServices, ServiceName, ServiceOptions } from './types';
 import { getCredentials } from './utils';
@@ -14,8 +17,8 @@ export class Service extends ServiceProvider {
     this.options = options;
   }
 
-  protected get callHeaders(): Record<string, string> {
-    throw new Error('Method not implemented.');
+  protected get callMetadata(): RpcMetadata {
+    throw new Error('Not implemented');
   }
 
   protected loadService<T = AllServices>(serviceName: ServiceName): T {
@@ -26,9 +29,12 @@ export class Service extends ServiceProvider {
 
     const credentials = getCredentials(this.options.auth);
 
-    const client = new ProtoService({
-      sslCreds: credentials,
+    const transport = new GrpcTransport({
+      host: 'googleads.googleapis.com',
+      channelCredentials: credentials,
     });
+
+    const client = new ProtoService(transport);
 
     this.cachedClients[serviceName] = client;
 

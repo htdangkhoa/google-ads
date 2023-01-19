@@ -1,5 +1,5 @@
 import { google } from 'googleapis';
-import { Customer, GoogleAds } from '../lib';
+import { Customer, GoogleAds } from '../src/lib';
 
 const authClient = new google.auth.JWT({
   keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
@@ -15,7 +15,9 @@ async function main() {
     developer_token,
   });
 
-  const { resource_names: customers } = await service.listAccessibleCustomers();
+  const {
+    response: { resourceNames: customers },
+  } = await service.listAccessibleCustomers();
 
   const customer_id = customers![0].replace('customers/', '');
   console.log('🚀 ~ file: ads.ts ~ line 22 ~ main ~ customer_id', customer_id);
@@ -30,7 +32,9 @@ async function main() {
     },
   );
 
-  const customerClients = await googleAdsService.search({
+  const {
+    response: { results: customerClients },
+  } = await googleAdsService.search({
     query: `
       SELECT
         customer_client.resource_name,
@@ -43,10 +47,8 @@ async function main() {
   });
 
   const customer_client = customerClients
-    .find(
-      (it) => it.customer_client!.client_customer === 'customers/1797830005',
-    )!
-    .customer_client!.client_customer!.replace('customers/', '');
+    .find((it) => it.customerClient?.clientCustomer === 'customers/1797830005')!
+    .customerClient!.clientCustomer!.replace('customers/', '');
   console.log(
     '🚀 ~ file: ads.ts ~ line 51 ~ main ~ customer_client',
     customer_client,

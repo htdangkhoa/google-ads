@@ -1,3 +1,5 @@
+import { RpcMetadata } from '@protobuf-ts/runtime-rpc';
+
 export abstract class ServiceProvider {
-  protected abstract get callHeaders(): Record<string, string>;
+  protected abstract get callMetadata(): RpcMetadata;
 }
