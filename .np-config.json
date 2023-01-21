@@ -1,4 +1,4 @@
 {
   "yarn": false,
-  "yolo": true
+  "tests": false
 }

@@ -225,13 +225,7 @@ const response = await service.search({ query });
     yarn install
     ```
 
-2. Patch `ts-proto` fix the fieldmask issue
-
-    ```sh
-    yarn patch-package ts-proto
-    ```
-
-3. Pull in the new protos and compile them
+2. Pull in the new protos and compile them
 
     ```sh
     yarn generate <GOOGLE_API_VERSION>
@@ -240,12 +234,12 @@ const response = await service.search({ query });
     yarn generate v12
     ```
 
-4. Build the library
+3. Build the library
 
     ```sh
     yarn build
     ```
 
-5. Make a pull request, get it approved and merged into master
+4. Make a pull request, get it approved and merged into master
 
-6. Publish to npm
+5. Publish to npm
