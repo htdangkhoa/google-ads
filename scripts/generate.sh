@@ -25,6 +25,8 @@ fi
 
 mkdir -p $outdir
 
+echo 'Generating Protobuf files'
+
 protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto \
   --experimental_allow_proto3_optional \
   --proto_path $path \
