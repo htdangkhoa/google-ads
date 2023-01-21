@@ -1,3 +1,4 @@
+export * from '../generated/google';
 export * from './constants';
 export * from './Customer';
 export * from './GoogleAds';

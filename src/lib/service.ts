@@ -1,5 +1,4 @@
-import { GrpcTransport } from '@protobuf-ts/grpc-transport';
-import { RpcMetadata } from '@protobuf-ts/runtime-rpc';
+import { Metadata } from '@grpc/grpc-js';
 
 import { ServiceProvider } from './ServiceProvider';
 import { AllServices, ServiceName, ServiceOptions } from './types';
@@ -17,7 +16,7 @@ export class Service extends ServiceProvider {
     this.options = options;
   }
 
-  protected get callMetadata(): RpcMetadata {
+  protected get callMetadata(): Metadata {
     throw new Error('Not implemented');
   }
 
@@ -29,12 +28,7 @@ export class Service extends ServiceProvider {
 
     const credentials = getCredentials(this.options.auth);
 
-    const transport = new GrpcTransport({
-      host: 'googleads.googleapis.com',
-      channelCredentials: credentials,
-    });
-
-    const client = new ProtoService(transport);
+    const client = new ProtoService('googleads.googleapis.com', credentials);
 
     this.cachedClients[serviceName] = client;
 

@@ -1,16 +1,18 @@
-import { GoogleAdsServiceClient } from '../generated/google';
-import { RpcOptions, RpcMetadata } from '@protobuf-ts/runtime-rpc';
+import { Metadata } from '@grpc/grpc-js';
 import { all as mergeAll } from 'deepmerge';
 
 import { Service } from './Service';
 import { CustomerOptions, ServiceOptions, OptionalExceptFor } from './types';
+import { GoogleAdsServiceClient } from '../generated/google';
 import {
   SearchGoogleAdsRequest,
+  SearchGoogleAdsResponse,
   SearchGoogleAdsStreamRequest,
+  SearchGoogleAdsStreamResponse,
   MutateGoogleAdsRequest,
+  MutateGoogleAdsResponse,
 } from '../generated/google/ads/googleads/v12/services/google_ads_service';
-import { SummaryRowSettingEnum_SummaryRowSetting } from '../generated/google/ads/googleads/v12/enums/summary_row_setting';
-import { ResponseContentTypeEnum_ResponseContentType } from '../generated/google/ads/googleads/v12/enums/response_content_type';
+import { decodeGoogleAdsFailureBuffer } from './utils';
 
 export class GoogleAds extends Service {
   private customerOptions: CustomerOptions;
@@ -21,17 +23,17 @@ export class GoogleAds extends Service {
     this.customerOptions = customer;
   }
 
-  protected get callMetadata(): RpcMetadata {
-    const meta: RpcMetadata = {};
+  protected get callMetadata(): Metadata {
+    const meta = new Metadata();
 
-    meta['developer-token'] = this.options.developer_token;
+    meta.set('developer-token', this.options.developer_token);
 
-    if (this.customerOptions?.login_customer_id) {
-      meta['login-customer-id'] = this.customerOptions.login_customer_id;
+    if (this.customerOptions.login_customer_id) {
+      meta.set('login-customer-id', this.customerOptions.login_customer_id);
     }
 
-    if (this.customerOptions?.linked_customer_id) {
-      meta['linked-customer-id'] = this.customerOptions.linked_customer_id;
+    if (this.customerOptions.linked_customer_id) {
+      meta.set('linked-customer-id', this.customerOptions.linked_customer_id);
     }
 
     return meta;
@@ -39,104 +41,95 @@ export class GoogleAds extends Service {
 
   private transformRequest<R = any>(
     request: any,
-    options: RpcOptions = {},
-  ): [R, RpcOptions] {
+    metadata?: Metadata,
+  ): [R, Metadata] {
     const req = <R>(
-      mergeAll([{ customerId: this.customerOptions.customer_id }, request])
+      mergeAll([{ customer_id: this.customerOptions.customer_id }, request])
     );
 
-    const opts = <RpcOptions>mergeAll([
-      {
-        meta: this.callMetadata,
-      },
-      options,
-    ]);
+    const meta = this.callMetadata;
+    if (metadata) {
+      meta.merge(metadata);
+    }
 
-    return [req, opts];
+    return [req, meta];
   }
 
-  search(
-    request: OptionalExceptFor<SearchGoogleAdsRequest, 'query'>,
-    options: RpcOptions = {},
-  ) {
+  search(request: SearchGoogleAdsRequest, metadata?: Metadata) {
     const client: GoogleAdsServiceClient = this.loadService(
       'GoogleAdsServiceClient',
     );
 
-    const [req, opts] = this.transformRequest<SearchGoogleAdsRequest>(
+    const [req, meta] = this.transformRequest<SearchGoogleAdsRequest>(
       request,
-      options,
+      metadata,
     );
 
-    const finalReq = <SearchGoogleAdsRequest>mergeAll([
-      req,
-      {
-        query: req.query,
-        returnTotalResultsCount: req.returnTotalResultsCount || false,
-        validateOnly: req.validateOnly || false,
-        summaryRowSetting:
-          req.summaryRowSetting ||
-          SummaryRowSettingEnum_SummaryRowSetting.NO_SUMMARY_ROW,
-        pageToken: req.pageToken || '',
-        pageSize: req.pageSize || 10000,
-      },
-    ]);
+    return new Promise<SearchGoogleAdsResponse>((resolve, reject) =>
+      client.search(req, meta, (error, response) => {
+        if (error) {
+          return reject(error);
+        }
 
-    return client.search(finalReq, opts);
+        return resolve(response);
+      }),
+    );
   }
 
   async *searchStream(
-    request: OptionalExceptFor<SearchGoogleAdsStreamRequest, 'query'>,
-    options: RpcOptions = {},
-  ) {
+    request: SearchGoogleAdsStreamRequest,
+    metadata?: Metadata,
+  ): AsyncGenerator<SearchGoogleAdsStreamResponse, void, unknown> {
     const client: GoogleAdsServiceClient = this.loadService(
       'GoogleAdsServiceClient',
     );
 
-    const [req, opts] = this.transformRequest(request, options);
+    const [req, meta] = this.transformRequest<SearchGoogleAdsStreamRequest>(
+      request,
+      metadata,
+    );
 
-    const finalReq = <SearchGoogleAdsStreamRequest>mergeAll([
-      req,
-      {
-        query: req.query,
-        summaryRowSetting:
-          req.summaryRowSetting ||
-          SummaryRowSettingEnum_SummaryRowSetting.NO_SUMMARY_ROW,
-      },
-    ]);
-
-    const { responses } = client.searchStream(finalReq, opts);
+    const responses = client.searchStream(req, meta);
 
     for await (const response of responses) {
       yield response;
     }
   }
 
-  mutate(
-    request: OptionalExceptFor<MutateGoogleAdsRequest, 'mutateOperations'>,
-    options: RpcOptions = {},
-  ) {
+  mutate(request: MutateGoogleAdsRequest, metadata?: Metadata) {
     const client: GoogleAdsServiceClient = this.loadService(
       'GoogleAdsServiceClient',
     );
 
-    const [req, opts] = this.transformRequest<MutateGoogleAdsRequest>(
+    const [req, meta] = this.transformRequest<MutateGoogleAdsRequest>(
       request,
-      options,
+      metadata,
     );
 
-    const finalReq = <MutateGoogleAdsRequest>mergeAll([
-      req,
-      {
-        mutateOperations: req.mutateOperations,
-        partialFailure: req.partialFailure || false,
-        validateOnly: req.validateOnly || false,
-        responseContentType:
-          req.responseContentType ||
-          ResponseContentTypeEnum_ResponseContentType.MUTABLE_RESOURCE,
-      },
-    ]);
+    return new Promise<MutateGoogleAdsResponse>((resolve, reject) =>
+      client.mutate(req, meta, (error, response) => {
+        if (error) {
+          return reject(error);
+        }
 
-    return client.mutate(finalReq, opts);
+        if (!response.partial_failure_error) return resolve(response);
+
+        const unit8Array = response.partial_failure_error.details?.find?.(
+          (detail) => detail.type_url?.includes('errors.GoogleAdsFailure'),
+        )?.value;
+
+        if (!unit8Array || !unit8Array.length) return resolve(response);
+
+        const buffer = Buffer.from(unit8Array);
+
+        const partialFailureError = decodeGoogleAdsFailureBuffer(buffer);
+
+        const result = <MutateGoogleAdsResponse>(
+          mergeAll([response, { partial_failure_error: partialFailureError }])
+        );
+
+        return resolve(result);
+      }),
+    );
   }
 }

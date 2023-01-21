@@ -14,8 +14,8 @@ glob(`${path}/**/*.ts`, (err, files) => {
     .map((file) => {
       const filepath = file.replace(path, '').replace(/\.ts$/, '');
       const content = fs.readFileSync(file, 'utf8');
-      // const match = content.match(/export const (\w+)Service/);
-      const match = content.match(/export class (\w+)ServiceClient /);
+
+      const match = content.match(/export const (\w+)ServiceClient =/);
 
       if (match) {
         return `export { ${match[1]}ServiceClient } from '.${filepath}';`;

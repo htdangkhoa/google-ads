@@ -20,8 +20,17 @@ fi
 
 mkdir -p $outdir
 
-yarn protoc --ts_out $outdir --proto_path $path \
-  --ts_opt generate_dependencies,long_type_string,force_optimize_code_size,optimize_speed \
+protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto \
+  --experimental_allow_proto3_optional \
+  --proto_path $path \
+  --ts_proto_out=$outdir \
+  --ts_proto_opt=forceLong=string \
+  --ts_proto_opt=snakeToCamel=false \
+  --ts_proto_opt=useOptionals=all \
+  --ts_proto_opt=useAbortSignal=true \
+  --ts_proto_opt=useExactTypes=false \
+  --ts_proto_opt=esModuleInterop=true \
+  --ts_proto_opt=outputServices=generic-definitions,outputServices=grpc-js \
   $path/google/ads/googleads/$version/**/*.proto
 
 node scripts/export_client.js $outdir/google/ads/googleads/$version
