@@ -1,4 +1,4 @@
-import { mergeDeepRight } from 'ramda';
+import { all as mergeAll } from 'deepmerge';
 import { Condition, OrderBy, OrderDirection, QUERY } from './types';
 
 export class QueryBuilder {
@@ -40,7 +40,9 @@ export class QueryBuilder {
   }
 
   parameters(parameters: Record<string, string>) {
-    this._parameters = mergeDeepRight(this._parameters, parameters);
+    this._parameters = <Record<string, string>>(
+      mergeAll([this._parameters, parameters])
+    );
     return this;
   }
 

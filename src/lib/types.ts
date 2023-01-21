@@ -1,12 +1,15 @@
-import allProtos from 'google-ads-node';
-import { grpc } from 'google-gax';
+import { OAuth2Client } from '@grpc/grpc-js';
+import allProtos from '../generated/google';
 import { VERSION } from './constants';
+
+export type OptionalExceptFor<T, TRequired extends keyof T> = Partial<T> &
+  Pick<T, TRequired>;
 
 export type AllServices = Omit<typeof allProtos, typeof VERSION>;
 export type ServiceName = keyof Omit<typeof allProtos, typeof VERSION>;
 
 export interface ServiceOptions {
-  auth: grpc.OAuth2Client;
+  auth: OAuth2Client;
   developer_token: string;
 }
 

@@ -1,0 +1,38 @@
+#!/bin/bash
+
+version=$1
+
+if [ -z "$version" ]; then
+    echo "Version is required! Usage: generate.sh v12"
+    exit 1
+fi
+
+path="$PWD/googleapis"
+
+outdir="$PWD/src/generated"
+
+rm -rf $outdir
+
+if [ ! -d "$path/.git" ]; then
+  echo 'Cloning Git repository'
+  git clone https://github.com/googleapis/googleapis.git "$path"
+fi
+
+mkdir -p $outdir
+
+protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto \
+  --experimental_allow_proto3_optional \
+  --proto_path $path \
+  --ts_proto_out=$outdir \
+  --ts_proto_opt=forceLong=string \
+  --ts_proto_opt=snakeToCamel=false \
+  --ts_proto_opt=useOptionals=all \
+  --ts_proto_opt=useAbortSignal=true \
+  --ts_proto_opt=useExactTypes=false \
+  --ts_proto_opt=esModuleInterop=true \
+  --ts_proto_opt=outputServices=generic-definitions,outputServices=grpc-js \
+  $path/google/ads/googleads/$version/**/*.proto
+
+node scripts/export_client.js $outdir/google/ads/googleads/$version
+
+node scripts/indexing.js $outdir/google $version

@@ -1,3 +1,5 @@
+import { Metadata } from '@grpc/grpc-js';
+
 import { ServiceProvider } from './ServiceProvider';
 import { AllServices, ServiceName, ServiceOptions } from './types';
 import { getCredentials } from './utils';
@@ -14,21 +16,19 @@ export class Service extends ServiceProvider {
     this.options = options;
   }
 
-  protected get callHeaders(): Record<string, string> {
-    throw new Error('Method not implemented.');
+  protected get callMetadata(): Metadata {
+    throw new Error('Not implemented');
   }
 
   protected loadService<T = AllServices>(serviceName: ServiceName): T {
     if (this.cachedClients[serviceName])
       return this.cachedClients[serviceName] as T;
 
-    const { [serviceName]: ProtoService } = require('google-ads-node');
+    const { [serviceName]: ProtoService } = require('../generated/google');
 
     const credentials = getCredentials(this.options.auth);
 
-    const client = new ProtoService({
-      sslCreds: credentials,
-    });
+    const client = new ProtoService('googleads.googleapis.com', credentials);
 
     this.cachedClients[serviceName] = client;
 

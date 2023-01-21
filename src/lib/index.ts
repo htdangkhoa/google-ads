@@ -1,4 +1,4 @@
-export { protos } from 'google-ads-node';
+export * from '../generated/google';
 export * from './constants';
 export * from './Customer';
 export * from './GoogleAds';

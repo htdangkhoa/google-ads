@@ -1,6 +1,8 @@
 import { google } from 'googleapis';
 
-import { GoogleAds, protos } from '../lib';
+import { GoogleAds } from '../src/lib';
+import { Asset } from '../src/generated/google/ads/googleads/v12/resources/asset';
+import { MutateOperation } from '../src/generated/google/ads/googleads/v12/services/google_ads_service';
 
 const authClient = new google.auth.JWT({
   keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
@@ -11,7 +13,7 @@ const authClient = new google.auth.JWT({
 export async function uploadAsset(
   customer_id: string,
   login_customer_id: string,
-  assets: protos.google.ads.googleads.v12.resources.IAsset[],
+  assets: Asset[],
 ) {
   const service = new GoogleAds(
     {
@@ -24,12 +26,11 @@ export async function uploadAsset(
     },
   );
 
-  const mutate_operations: protos.google.ads.googleads.v12.services.IMutateOperation[] =
-    assets.map((asset) => ({
-      asset_operation: {
-        create: asset,
-      },
-    }));
+  const mutate_operations: MutateOperation[] = assets.map((asset) => ({
+    asset_operation: {
+      create: asset,
+    },
+  }));
 
   try {
     const { mutate_operation_responses, partial_failure_error } =

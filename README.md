@@ -1,4 +1,13 @@
-# Google Ads API Nodejs Client Library
+<h1 align="center">Google Ads API Nodejs Client Library</h1>
+
+<p align="center">
+  <a href="https://developers.google.com/google-ads/api/docs/release-notes">
+    <img src="https://img.shields.io/badge/google%20ads-v12-009688.svg?style=flat-square">
+  </a>
+  <a href="https://www.npmjs.com/package/@htdangkhoa/google-ads">
+    <img src="https://img.shields.io/npm/v/@htdangkhoa/google-ads.svg?style=flat-square">
+  </a>
+</p>
 
 ## Usage
 
@@ -25,7 +34,7 @@ const authClient = new JWT({
 ### Customer
 
 ```ts
-import { Customer } from 'google-ads';
+import { Customer } from '@htdangkhoa/google-ads';
 
 const service = new Customer({
   auth: authClient,
@@ -40,7 +49,7 @@ const { resource_names: customers } = await service.listAccessibleCustomers();
 ### Search
 
 ```ts
-import { GoogleAds } from 'google-ads';
+import { GoogleAds } from '@htdangkhoa/google-ads';
 
 const service = new GoogleAds(
   {
@@ -70,7 +79,7 @@ const customerClients = await service.search({
 ### Search stream
 
 ```ts
-import { GoogleAds } from 'google-ads';
+import { GoogleAds } from '@htdangkhoa/google-ads';
 
 const service = new GoogleAds(
   {
@@ -105,7 +114,7 @@ while (true) {
 ### Campaign
 
 ```ts
-import { GoogleAds } from 'google-ads';
+import { GoogleAds } from '@htdangkhoa/google-ads';
 
 const service = new GoogleAds(
   {
@@ -134,7 +143,7 @@ const campaigns = await service.search({
 ### Mutate
 
 ```ts
-import { GoogleAds } from 'google-ads';
+import { GoogleAds } from '@htdangkhoa/google-ads';
 
 const service = new GoogleAds(
   {
@@ -165,3 +174,72 @@ const response = await service.mutate({
 
 // ...
 ```
+
+### Query Builder
+
+```ts
+import { QueryBuilder } from '@htdangkhoa/google-ads';
+
+const query = new QueryBuilder()
+  .select(
+    'campaign.id',
+    'campaign.name',
+    'segments.device',
+    'metrics.clicks',
+  )
+  .from('campaign')
+  .where(
+    {
+      attribute: 'metrics.impressions',
+      operator: Operators.GREATER_THAN,
+      value: "0",
+    },
+    {
+      attribute: 'segments.device',
+      operator: Operators.EQUALS,
+      value: "MOBILE",
+    },
+    {
+      attribute: 'segments.date',
+      operator: Operators.DURING,
+      value: Functions.LAST_30_DAYS,
+    },
+  )
+  .orderBy(
+    {
+      attribute: 'metrics.clicks',
+      direction: Order.DESC,
+    },
+  )
+  .limit(10)
+  .build();
+
+const response = await service.search({ query });
+```
+
+## Development
+
+1. Install dependencies
+
+    ```sh
+    yarn install
+    ```
+
+2. Pull in the new protos and compile them
+
+    ```sh
+    yarn generate <GOOGLE_API_VERSION>
+
+    # example
+    yarn generate v12
+    ```
+
+3. Build the library
+
+    ```sh
+    yarn build
+    ```
+
+4. Make a pull request, get it approved and merged into master
+
+5. Publish to npm

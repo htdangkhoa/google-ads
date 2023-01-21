@@ -1,5 +1,5 @@
 import { google } from 'googleapis';
-import { Customer, GoogleAds } from '../lib';
+import { Customer, GoogleAds } from '../src/lib';
 
 const authClient = new google.auth.JWT({
   keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
@@ -18,7 +18,7 @@ async function main() {
   const { resource_names: customers } = await service.listAccessibleCustomers();
 
   const customer_id = customers![0].replace('customers/', '');
-  console.log('🚀 ~ file: ads.ts ~ line 22 ~ main ~ customer_id', customer_id);
+  console.log('customer_id:', customer_id);
 
   const googleAdsService = new GoogleAds(
     {
@@ -30,7 +30,7 @@ async function main() {
     },
   );
 
-  const customerClients = await googleAdsService.search({
+  const { results: customerClients } = await googleAdsService.search({
     query: `
       SELECT
         customer_client.resource_name,
@@ -42,15 +42,32 @@ async function main() {
     `,
   });
 
-  const customer_client = customerClients
+  const customer_client = customerClients!
     .find(
-      (it) => it.customer_client!.client_customer === 'customers/1797830005',
+      (it) => it.customer_client?.client_customer === 'customers/1797830005',
     )!
     .customer_client!.client_customer!.replace('customers/', '');
-  console.log(
-    '🚀 ~ file: ads.ts ~ line 51 ~ main ~ customer_client',
-    customer_client,
-  );
+  console.log('customer_client:', customer_client);
+
+  const stream = googleAdsService.searchStream({
+    query: `
+      SELECT
+        customer_client.resource_name,
+        customer_client.client_customer,
+        customer_client.level,
+        customer_client.hidden,
+        customer_client.level
+      FROM customer_client
+    `,
+  });
+
+  while (true) {
+    const { value, done } = await stream.next();
+    if (done) {
+      break;
+    }
+    console.log('value:', value);
+  }
 
   const customerClientGoogleAdsService = new GoogleAds(
     {
@@ -63,7 +80,7 @@ async function main() {
     },
   );
 
-  const adGroups = await customerClientGoogleAdsService.search({
+  const { results: adGroups } = await customerClientGoogleAdsService.search({
     query: `
       SELECT
         asset.name,
@@ -79,6 +96,7 @@ async function main() {
       FROM asset
     `,
   });
+  console.log('adGroups:', adGroups);
 }
 
 main();

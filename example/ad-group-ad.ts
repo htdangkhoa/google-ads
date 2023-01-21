@@ -1,6 +1,8 @@
 import { google } from 'googleapis';
 
-import { GoogleAds, protos } from '../lib';
+import { GoogleAds } from '../src/lib';
+import { AdTextAsset } from '../src/generated/google/ads/googleads/v12/common/ad_asset';
+import { AdGroupAdStatusEnum_AdGroupAdStatus } from '../src/generated/google/ads/googleads/v12/enums/ad_group_ad_status';
 
 const authClient = new google.auth.JWT({
   keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
@@ -12,8 +14,8 @@ export async function createAdGroupAdApp(
   customer_id: string,
   login_customer_id: string,
   ad_group_resource: string,
-  headlines: protos.google.ads.googleads.v12.common.IAdTextAsset[],
-  descriptions: protos.google.ads.googleads.v12.common.IAdTextAsset[],
+  headlines: AdTextAsset[],
+  descriptions: AdTextAsset[],
 ) {
   const service = new GoogleAds(
     {
@@ -48,7 +50,7 @@ export async function createAdGroupAdApp(
                 ],
               },
             },
-            status: 'PAUSED',
+            status: AdGroupAdStatusEnum_AdGroupAdStatus.PAUSED,
           },
         },
       },

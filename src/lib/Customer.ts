@@ -1,34 +1,34 @@
-import { CustomerServiceClient } from 'google-ads-node';
+import { Metadata } from '@grpc/grpc-js';
+
 import { Service } from './Service';
-import { getGoogleAdsError } from './utils';
+import { CustomerServiceClient } from '../generated/google';
+import { ListAccessibleCustomersResponse } from '../generated/google/ads/googleads/v12/services/customer_service';
 
 export class Customer extends Service {
-  protected get callHeaders(): Record<string, string> {
-    const headers = {
-      'developer-token': this.options.developer_token,
-    };
+  protected get callMetadata(): Metadata {
+    const meta = new Metadata();
+    meta.set('developer-token', this.options.developer_token);
 
-    return headers;
+    return meta;
   }
 
-  async listAccessibleCustomers() {
+  listAccessibleCustomers() {
     const client: CustomerServiceClient = this.loadService(
       'CustomerServiceClient',
     );
 
-    const [response] = await client
-      .listAccessibleCustomers(
+    return new Promise<ListAccessibleCustomersResponse>((resolve, reject) =>
+      client.listAccessibleCustomers(
         {},
-        {
-          otherArgs: {
-            headers: this.callHeaders,
-          },
-        },
-      )
-      .catch((error) => {
-        throw getGoogleAdsError(error);
-      });
+        this.callMetadata,
+        (error, response) => {
+          if (error) {
+            return reject(error);
+          }
 
-    return response;
+          return resolve(response);
+        },
+      ),
+    );
   }
 }
