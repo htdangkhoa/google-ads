@@ -30,7 +30,10 @@ jobs:
 
       - name: Publish if version has been updated
         run: |
-          yarn npm-publish --token=${{ secrets.NPM_TOKEN }} --tag=${{ github.ref_name }} ./package.json
+          echo ${{ github.ref_name }} > .version
+          sed -i 's/v//g' .version
+          version=$(cat .version)
+          yarn npm-publish --token=${{ secrets.NPM_TOKEN }} --tag=$version ./package.json
 
       - name: Release
         uses: softprops/action-gh-release@v1
