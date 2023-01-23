@@ -1,5 +1,6 @@
 {
   "yarn": false,
   "publish": false,
-  "tests": false
+  "tests": false,
+  "branch": "main"
 }
