@@ -10,16 +10,12 @@ on:
 
 jobs:
   test:
-    environment: ${{ inputs.environment }}
-
+    name: Node ${{ matrix.node }} testing
     runs-on: ubuntu-latest
-
+    environment: ${{ inputs.environment }}
     strategy:
       matrix:
         node: ['14', '16', '18']
-
-    name: Node ${{ matrix.node }} testing
-
     steps:
       - uses: actions/checkout@v3
 

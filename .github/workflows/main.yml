@@ -3,14 +3,25 @@ name: Test on production
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+    tags:
+      - '*'
 
 jobs:
   test:
     uses: ./.github/workflows/template.yml
     with:
       environment: production
+
+  npm-publish:
+    needs: test
+    name: npm-publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Publish if version has been updated
+        run: |
+          npm-publish --token=${{ secrets.NPM_TOKEN }} --tag=${{ github.ref_name }} ./package.json
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
