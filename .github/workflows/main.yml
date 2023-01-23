@@ -1,0 +1,16 @@
+name: Test on production
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    uses: ./.github/workflows/template.yml
+    with:
+      environment: production
