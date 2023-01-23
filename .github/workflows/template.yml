@@ -47,7 +47,7 @@ jobs:
 
       - name: Upload coverage to Coveralls
         run: |
-          yarn add coveralls
+          yarn add coveralls-next
           cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
 
       - name: Coveralls
