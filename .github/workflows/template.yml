@@ -7,8 +7,6 @@ on:
         description: 'The environment to deploy to'
         required: true
         type: string
-      release:
-        type: boolean
 
 jobs:
   test:
@@ -36,11 +34,6 @@ jobs:
       - name: Generate google ads api from protos
         run: yarn generate ${{ vars.GOOGLE_ADS_API_VERSION }}
 
-      - uses: actions/upload-artifact@v3
-        with:
-          name: generated
-          path: src/generated
-
       - name: Write COVERALLS_TOKEN to .coveralls.yml
         run: |
           echo repo_token: ${{ secrets.COVERALLS_TOKEN }} > .coveralls.yml
@@ -65,37 +58,4 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           parallel-finished: true
 
-  publish:
-    needs: test
-    if: ${{ inputs.release }}
-    name: Publish
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: 'yarn'
-
-      - name: Install Dependencies
-        run: yarn install --prefer-offline
-
-      - name: Download generated files
-        uses: actions/download-artifact@v3
-        with:
-          name: generated
-
-      - name: Publish if version has been updated
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          echo ${{ github.ref_name }} > .version
-          sed -i 's/v//g' .version
-          version=$(cat .version)
-          yarn release $version
-          npm publish --access public
-
-      - name: Release
-        uses: softprops/action-gh-release@v1
+  

@@ -12,3 +12,39 @@ jobs:
     with:
       environment: production
       release: true
+
+  release:
+    needs: test
+    name: Release
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'yarn'
+
+      - name: Install Dependencies
+        run: yarn install --prefer-offline
+
+      - name: Install Protoc
+        run: sudo apt install protobuf-compiler
+
+      - name: Generate google ads api from protos
+        run: yarn generate ${{ vars.GOOGLE_ADS_API_VERSION }}
+
+      - name: Publish if version has been updated
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          echo ${{ github.ref_name }} > .version
+          sed -i 's/v//g' .version
+          version=$(cat .version)
+          yarn release $version
+          npm publish --access public
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
