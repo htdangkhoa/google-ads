@@ -32,6 +32,9 @@ jobs:
       - name: Install Dependencies
         run: yarn install --prefer-offline
 
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v1.1.2
+
       - name: Generate google ads api from protos
         run: yarn generate ${{ vars.GOOGLE_ADS_API_VERSION }}
 
