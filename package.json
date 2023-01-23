@@ -9,7 +9,6 @@
   ],
   "scripts": {
     "test": "jest --runInBand --no-cache",
-    "test:cov": "npm run test && coveralls < coverage/lcov.info",
     "prebuild": "rimraf build",
     "build": "tsc",
     "prerelease": "npm run build",
@@ -25,7 +24,6 @@
     "@types/glob": "^8.0.0",
     "@types/jest": "^29.2.6",
     "@types/node": "^18.11.18",
-    "coveralls": "^3.1.1",
     "dotenv": "^16.0.3",
     "glob": "^8.1.0",
     "googleapis": "^110.0.0",
