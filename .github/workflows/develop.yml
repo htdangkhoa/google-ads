@@ -1,0 +1,16 @@
+name: Test on development
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  test:
+    uses: ./.github/workflows/template.yml
+    with:
+      environment: development

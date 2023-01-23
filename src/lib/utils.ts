@@ -20,7 +20,7 @@ export const decodeGoogleAdsFailureBuffer = (buffer: Buffer) =>
 
 export const getGoogleAdsError = (error: Error): GoogleAdsFailure | Error => {
   // @ts-expect-error
-  if (typeof error?.metadata?.internalRepr.get(FAILURE_KEY) === 'undefined') {
+  if (typeof error.metadata?.internalRepr?.get?.(FAILURE_KEY) === 'undefined') {
     return error;
   }
 

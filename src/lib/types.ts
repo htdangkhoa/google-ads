@@ -14,7 +14,7 @@ export interface ServiceOptions {
 }
 
 export interface CustomerOptions {
-  customer_id: string;
+  customer_id?: string;
   login_customer_id?: string;
   linked_customer_id?: string;
 }

@@ -7,6 +7,9 @@
   <a href="https://www.npmjs.com/package/@htdangkhoa/google-ads">
     <img src="https://img.shields.io/npm/v/@htdangkhoa/google-ads.svg?style=flat-square">
   </a>
+  <a href='https://coveralls.io/github/htdangkhoa/google-ads'>
+    <img src='https://img.shields.io/coverallsCoverage/github/htdangkhoa/google-ads?style=flat-square' alt='Coverage Status' />
+  </a>
 </p>
 
 ## Usage
@@ -85,29 +88,26 @@ const service = new GoogleAds(
   {
     auth: authClient,
     developer_token: '<DEVELOPER_TOKEN>',
-  },
-  {
-    customer_id: '<CUSTOMER_CLIENT_ID>',
-    login_customer_id: '<CUSTOMER_ID>',
-  },
+  }, {
+    customer_id: '<MANAGER_ID>',
+  }
 );
 
-const response = service.searchStream({
-  query: `
-    SELECT
-      campaign.id,
-      campaign.name,
-      campaign.status
-    FROM campaign
-  `,
-});
+const response = service
+  .setCustomerId('<CUSTOMER_ID>') // you can switch customer id
+  .setLoginCustomerId('<MANAGER_ID>')
+  .searchStream({
+    query: `
+      SELECT
+        campaign.id,
+        campaign.name,
+        campaign.status
+      FROM campaign
+    `,
+  });
 
-while (true) {
-  const { value, done } = await response.next();
-  if (done) {
-    break;
-  }
-  console.log(value);
+for await (const { results } of response) {
+  // ...
 }
 ```
 
@@ -170,6 +170,7 @@ const response = await service.mutate({
       },
     },
   ],
+  partial_failure: true,
 });
 
 // ...
@@ -234,12 +235,18 @@ const response = await service.search({ query });
     yarn generate v12
     ```
 
-3. Build the library
+3. Run tests to make sure everything worked (you may need to update the version numbers here)
+
+    ```sh
+    yarn test
+    ```
+
+4. Build the library
 
     ```sh
     yarn build
     ```
 
-4. Make a pull request, get it approved and merged into master
+5. Make a pull request, get it approved and merged into master
 
-5. Publish to npm
+6. Publish to npm
