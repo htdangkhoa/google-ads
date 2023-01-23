@@ -21,7 +21,7 @@ jobs:
 
       - name: Publish if version has been updated
         run: |
-          npm-publish --token=${{ secrets.NPM_TOKEN }} --tag=${{ github.ref_name }} ./package.json
+          yarn npm-publish --token=${{ secrets.NPM_TOKEN }} --tag=${{ github.ref_name }} ./package.json
 
       - name: Release
         uses: softprops/action-gh-release@v1
