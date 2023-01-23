@@ -46,7 +46,7 @@ jobs:
         run: yarn test
 
       - name: Coveralls
-        uses: coverallsapp/github-action@master
+        uses: pmienk/coveralls-github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           flag-name: ${{matrix.os}}-node-${{ matrix.node }}
@@ -57,7 +57,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Coveralls Finished
-        uses: coverallsapp/github-action@master
+        uses: pmienk/coveralls-github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           parallel-finished: true
