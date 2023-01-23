@@ -11,7 +11,6 @@ jobs:
     uses: ./.github/workflows/template.yml
     with:
       environment: production
-      release: true
 
   release:
     needs: test
