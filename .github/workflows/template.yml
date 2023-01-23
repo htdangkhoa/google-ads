@@ -33,7 +33,7 @@ jobs:
         run: yarn install --prefer-offline
 
       - name: Install Protoc
-        uses: arduino/setup-protoc@v1.1.2
+        run: sudo apt install protobuf-compiler
 
       - name: Generate google ads api from protos
         run: yarn generate ${{ vars.GOOGLE_ADS_API_VERSION }}
@@ -47,7 +47,7 @@ jobs:
 
       - name: Upload coverage to Coveralls
         run: |
-          yarn install coveralls
+          yarn add coveralls
           cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
 
       - name: Coveralls
