@@ -3,7 +3,7 @@ import { google } from 'googleapis';
 
 const authClient = new google.auth.JWT({
   keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
-  subject: 'htdangkhoa@htdangkhoa.com',
+  subject: '<YOUR_EMAIL>',
   scopes: ['https://www.googleapis.com/auth/youtube'],
 });
 

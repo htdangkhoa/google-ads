@@ -1,8 +1,9 @@
-import { Metadata } from '@grpc/grpc-js';
+import { promisify } from 'util';
+import { ClientReadableStream, Metadata } from '@grpc/grpc-js';
 import { all as mergeAll } from 'deepmerge';
 
 import { Service } from './Service';
-import { CustomerOptions, ServiceOptions, OptionalExceptFor } from './types';
+import { CustomerOptions, ServiceOptions } from './types';
 import { GoogleAdsServiceClient } from '../generated/google';
 import {
   SearchGoogleAdsRequest,
@@ -12,21 +13,38 @@ import {
   MutateGoogleAdsRequest,
   MutateGoogleAdsResponse,
 } from '../generated/google/ads/googleads/v12/services/google_ads_service';
-import { decodeGoogleAdsFailureBuffer } from './utils';
 
 export class GoogleAds extends Service {
   private customerOptions: CustomerOptions;
 
-  constructor(options: ServiceOptions, customer: CustomerOptions) {
+  constructor(options: ServiceOptions, customer: CustomerOptions = {}) {
     super(options);
 
     this.customerOptions = customer;
+  }
+
+  setCustomerId(customerId: string) {
+    this.customerOptions.customer_id = customerId;
+    return this;
+  }
+
+  setLoginCustomerId(loginCustomerId: string) {
+    this.customerOptions.login_customer_id = loginCustomerId;
+    return this;
+  }
+
+  setLinkedCustomerId(linkedCustomerId: string) {
+    this.customerOptions.linked_customer_id = linkedCustomerId;
+    return this;
   }
 
   protected get callMetadata(): Metadata {
     const meta = new Metadata();
 
     meta.set('developer-token', this.options.developer_token);
+
+    if (!this.customerOptions.customer_id)
+      throw new Error('Missing customer ID');
 
     if (this.customerOptions.login_customer_id) {
       meta.set('login-customer-id', this.customerOptions.login_customer_id);
@@ -65,21 +83,21 @@ export class GoogleAds extends Service {
       metadata,
     );
 
-    return new Promise<SearchGoogleAdsResponse>((resolve, reject) =>
-      client.search(req, meta, (error, response) => {
-        if (error) {
-          return reject(error);
-        }
+    const fn = client.search.bind(client);
 
-        return resolve(response);
-      }),
-    );
+    const caller = promisify<
+      SearchGoogleAdsRequest,
+      Metadata,
+      SearchGoogleAdsResponse
+    >(fn);
+
+    return caller(req, meta);
   }
 
-  async *searchStream(
+  searchStream(
     request: SearchGoogleAdsStreamRequest,
     metadata?: Metadata,
-  ): AsyncGenerator<SearchGoogleAdsStreamResponse, void, unknown> {
+  ): ClientReadableStream<SearchGoogleAdsStreamResponse> {
     const client: GoogleAdsServiceClient = this.loadService(
       'GoogleAdsServiceClient',
     );
@@ -89,11 +107,7 @@ export class GoogleAds extends Service {
       metadata,
     );
 
-    const responses = client.searchStream(req, meta);
-
-    for await (const response of responses) {
-      yield response;
-    }
+    return client.searchStream(req, meta);
   }
 
   mutate(request: MutateGoogleAdsRequest, metadata?: Metadata) {
@@ -106,30 +120,14 @@ export class GoogleAds extends Service {
       metadata,
     );
 
-    return new Promise<MutateGoogleAdsResponse>((resolve, reject) =>
-      client.mutate(req, meta, (error, response) => {
-        if (error) {
-          return reject(error);
-        }
+    const fn = client.mutate.bind(client);
 
-        if (!response.partial_failure_error) return resolve(response);
+    const caller = promisify<
+      MutateGoogleAdsRequest,
+      Metadata,
+      MutateGoogleAdsResponse
+    >(fn);
 
-        const unit8Array = response.partial_failure_error.details?.find?.(
-          (detail) => detail.type_url?.includes('errors.GoogleAdsFailure'),
-        )?.value;
-
-        if (!unit8Array || !unit8Array.length) return resolve(response);
-
-        const buffer = Buffer.from(unit8Array);
-
-        const partialFailureError = decodeGoogleAdsFailureBuffer(buffer);
-
-        const result = <MutateGoogleAdsResponse>(
-          mergeAll([response, { partial_failure_error: partialFailureError }])
-        );
-
-        return resolve(result);
-      }),
-    );
+    return caller(req, meta);
   }
 }

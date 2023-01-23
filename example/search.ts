@@ -1,5 +1,5 @@
 import { google } from 'googleapis';
-import { Customer, GoogleAds } from '../src/lib';
+import { Customer, GoogleAds, QueryBuilder } from '../src/lib';
 
 const authClient = new google.auth.JWT({
   keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
@@ -31,15 +31,15 @@ async function main() {
   );
 
   const { results: customerClients } = await googleAdsService.search({
-    query: `
-      SELECT
-        customer_client.resource_name,
-        customer_client.client_customer,
-        customer_client.level,
-        customer_client.hidden,
-        customer_client.level
-      FROM customer_client
-    `,
+    query: new QueryBuilder()
+      .select(
+        'customer_client.resource_name',
+        'customer_client.client_customer',
+        'customer_client.level',
+        'customer_client.hidden',
+      )
+      .from('customer_client')
+      .build(),
   });
 
   const customer_client = customerClients!
@@ -49,39 +49,11 @@ async function main() {
     .customer_client!.client_customer!.replace('customers/', '');
   console.log('customer_client:', customer_client);
 
-  const stream = googleAdsService.searchStream({
-    query: `
-      SELECT
-        customer_client.resource_name,
-        customer_client.client_customer,
-        customer_client.level,
-        customer_client.hidden,
-        customer_client.level
-      FROM customer_client
-    `,
-  });
-
-  while (true) {
-    const { value, done } = await stream.next();
-    if (done) {
-      break;
-    }
-    console.log('value:', value);
-  }
-
-  const customerClientGoogleAdsService = new GoogleAds(
-    {
-      auth: authClient,
-      developer_token,
-    },
-    {
-      customer_id: customer_client,
-      login_customer_id: customer_id,
-    },
-  );
-
-  const { results: adGroups } = await customerClientGoogleAdsService.search({
-    query: `
+  const stream = googleAdsService
+    .setCustomerId(customer_client)
+    .setLoginCustomerId(customer_id)
+    .searchStream({
+      query: `
       SELECT
         asset.name,
         -- IMAGE
@@ -95,8 +67,10 @@ async function main() {
         asset.youtube_video_asset.youtube_video_title
       FROM asset
     `,
-  });
-  console.log('adGroups:', adGroups);
+    });
+  for await (const response of stream) {
+    console.log('adGroups:', response.results);
+  }
 }
 
 main();

@@ -1,8 +1,12 @@
+import { promisify } from 'util';
 import { Metadata } from '@grpc/grpc-js';
 
 import { Service } from './Service';
 import { CustomerServiceClient } from '../generated/google';
-import { ListAccessibleCustomersResponse } from '../generated/google/ads/googleads/v12/services/customer_service';
+import {
+  ListAccessibleCustomersRequest,
+  ListAccessibleCustomersResponse,
+} from '../generated/google/ads/googleads/v12/services/customer_service';
 
 export class Customer extends Service {
   protected get callMetadata(): Metadata {
@@ -17,18 +21,14 @@ export class Customer extends Service {
       'CustomerServiceClient',
     );
 
-    return new Promise<ListAccessibleCustomersResponse>((resolve, reject) =>
-      client.listAccessibleCustomers(
-        {},
-        this.callMetadata,
-        (error, response) => {
-          if (error) {
-            return reject(error);
-          }
+    const fn = client.listAccessibleCustomers.bind(client);
 
-          return resolve(response);
-        },
-      ),
-    );
+    const caller = promisify<
+      ListAccessibleCustomersRequest,
+      Metadata,
+      ListAccessibleCustomersResponse
+    >(fn);
+
+    return caller({}, this.callMetadata);
   }
 }

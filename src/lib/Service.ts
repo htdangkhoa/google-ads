@@ -6,7 +6,7 @@ import { getCredentials } from './utils';
 
 export class Service extends ServiceProvider {
   // @ts-expect-error All fields don't need to be set here
-  private cachedClients: Record<ServiceName, AllServices> = {};
+  protected cachedClients: Record<ServiceName, AllServices> = {};
 
   protected options: ServiceOptions;
 
