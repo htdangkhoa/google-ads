@@ -7,6 +7,9 @@
   <a href="https://www.npmjs.com/package/@htdangkhoa/google-ads">
     <img src="https://img.shields.io/npm/v/@htdangkhoa/google-ads.svg?style=flat-square">
   </a>
+  <a href='https://coveralls.io/github/htdangkhoa/google-ads'>
+    <img src='https://img.shields.io/coverallsCoverage/github/htdangkhoa/google-ads?style=flat-square' alt='Coverage Status' />
+  </a>
 </p>
 
 ## Usage
