@@ -11,32 +11,4 @@ jobs:
     uses: ./.github/workflows/template.yml
     with:
       environment: production
-
-  npm-publish:
-    needs: test
-    name: npm-publish
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node }}
-          cache: 'yarn'
-
-      - name: Install Dependencies
-        run: yarn install --prefer-offline
-
-      - name: Publish if version has been updated
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          echo ${{ github.ref_name }} > .version
-          sed -i 's/v//g' .version
-          version=$(cat .version)
-          yarn release $version
-          npm publish --access public
-
-      - name: Release
-        uses: softprops/action-gh-release@v1
+      release: true
