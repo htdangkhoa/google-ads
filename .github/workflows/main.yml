@@ -29,11 +29,14 @@ jobs:
         run: yarn install --prefer-offline
 
       - name: Publish if version has been updated
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           echo ${{ github.ref_name }} > .version
           sed -i 's/v//g' .version
           version=$(cat .version)
-          yarn npm-publish --token=${{ secrets.NPM_TOKEN }} --tag=$version ./package.json
+          yarn release $version
+          npm publish --access public
 
       - name: Release
         uses: softprops/action-gh-release@v1
