@@ -17,8 +17,7 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     environment: production
-    permissions:
-      contents: read
+    permissions: write-all
     steps:
       - uses: actions/checkout@v3
         with:
@@ -43,6 +42,8 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
+          git config --global user.name "Github Actions"
+          git config --global user.email "actions@users.noreply.github.com"
           echo ${{ github.ref_name }} > .version
           sed -i 's/v//g' .version
           version=$(cat .version)
