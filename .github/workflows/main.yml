@@ -48,7 +48,7 @@ jobs:
           echo ${{ github.ref_name }} > .version
           sed -i 's/v//g' .version
           version=$(cat .version)
-          yarn release $version
+          yarn release $version --no-publish --no-yarn --yolo --any-branch
           npm publish --access public
 
       - name: Release
