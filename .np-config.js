@@ -3,4 +3,5 @@ module.exports = {
   publish: false,
   tests: false,
   branch: 'main',
+  yolo: true,
 };

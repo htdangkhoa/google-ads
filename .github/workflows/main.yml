@@ -8,6 +8,7 @@ on:
 
 jobs:
   test:
+    name: Test
     uses: ./.github/workflows/template.yml
     with:
       environment: production
