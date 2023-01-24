@@ -19,6 +19,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Install Protoc
+        run: sudo apt install protobuf-compiler
+
       - name: Setup node
         uses: actions/setup-node@v3
         with:
@@ -27,9 +30,6 @@ jobs:
 
       - name: Install Dependencies
         run: yarn install --prefer-offline
-
-      - name: Install Protoc
-        run: sudo apt install protobuf-compiler
 
       - name: Generate google ads api from protos
         run: yarn generate ${{ vars.GOOGLE_ADS_API_VERSION }}
