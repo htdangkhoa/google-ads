@@ -40,6 +40,6 @@ protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto \
   --ts_proto_opt=outputServices=generic-definitions,outputServices=grpc-js \
   $path/google/ads/googleads/$version/**/*.proto
 
-node scripts/export_client.js $outdir/google/ads/googleads/$version
+node scripts/export-client.js $outdir/google/ads/googleads/$version
 
 node scripts/indexing.js $outdir/google $version
