@@ -17,7 +17,6 @@ jobs:
     needs: export-google-ads-api-version
     uses: ./.github/workflows/template.yml
     with:
-      environment: production
       node-version: 18
       google-ads-api-version: ${{ needs.export-google-ads-api-version.outputs.google-ads-api-version }}
       test: false
@@ -50,6 +49,7 @@ jobs:
 
   cleanup:
     name: Cleanup
+    needs: publish
     uses: ./.github/workflows/cleanup.yml
     with:
       environment: production
