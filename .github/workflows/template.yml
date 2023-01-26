@@ -30,6 +30,7 @@ jobs:
   generate:
     name: Generate google ads api ${{ inputs.google-ads-api-version }} for Node ${{ inputs.node-version }}
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     steps:
       - uses: actions/checkout@v3
 
