@@ -1,0 +1,34 @@
+name: Cleanup workflow
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: 'The environment to use the variables from'
+        required: true
+        type: string
+
+jobs:
+  cleanup:
+    name: Delete previous deployments
+    runs-on: ubuntu-latest
+    permissions:
+      deployments: write
+    steps:
+      - name: Delete previous deployments
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { data: deployments } = await github.repos.listDeployments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              environment: '${{ inputs.environment }}',
+            })
+
+            for (const deployment of deployments) {
+              await github.repos.deleteDeployment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                deployment_id: deployment.id,
+              })
+            }

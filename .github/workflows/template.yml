@@ -29,7 +29,7 @@ on:
 jobs:
   generate:
     name: Generate google ads api ${{ inputs.google-ads-api-version }} for Node ${{ inputs.node-version }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
@@ -54,12 +54,18 @@ jobs:
         if: ${{ inputs.test }}
         run: yarn test
 
-      - name: Create coverage artifact
+      - name: Write COVERALLS_TOKEN to .coveralls.yml
         if: ${{ inputs.test }}
-        uses: actions/upload-artifact@v3
+        run: |
+          echo repo_token: ${{ secrets.COVERALLS_TOKEN }} > .coveralls.yml
+
+      - name: Coveralls
+        if: ${{ inputs.test }}
+        uses: pmienk/coveralls-github-action@master
         with:
-          name: coverage ${{ inputs.node-version }}
-          path: coverage
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          flag-name: ${{matrix.os}}-node-${{ matrix.node }}
+          parallel: true
 
       - name: Build
         if: ${{ inputs.build }}

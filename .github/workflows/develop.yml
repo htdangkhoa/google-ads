@@ -15,3 +15,9 @@ jobs:
     uses: ./.github/workflows/test.yml
     with:
       environment: development
+
+  cleanup:
+    name: Cleanup
+    uses: ./.github/workflows/cleanup.yml
+    with:
+      environment: development
