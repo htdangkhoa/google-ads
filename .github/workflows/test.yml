@@ -24,7 +24,7 @@ jobs:
 
   coveralls:
     name: Coveralls finished
-    needs: generate
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Coveralls finished
