@@ -49,6 +49,7 @@ jobs:
 
   cleanup:
     name: Cleanup
+    needs: publish
     uses: ./.github/workflows/cleanup.yml
     with:
       environment: production
