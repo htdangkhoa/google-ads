@@ -1,6 +1,7 @@
 name: Generate google ads api and run tests
 
 on:
+  workflow_dispatch:
   workflow_call:
     inputs:
       environment:
