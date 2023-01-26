@@ -8,37 +8,35 @@ on:
 
 jobs:
   test:
-    name: Test
-    uses: ./.github/workflows/template.yml
+    name: Run tests
+    uses: ./.github/workflows/workflow.yml
     with:
       environment: production
 
-  release:
+  build:
     needs: test
     name: Release
+    uses: ./.github/workflows/template.yml
+    with:
+      environment: production
+      node-version: 18
+      google-ads-api-version: ${{ vars.GOOGLE_ADS_API_VERSION }}
+      test: false
+      build: true
+
+  publish:
+    name: Publish
+    needs: build
     runs-on: ubuntu-latest
-    environment: production
     permissions: write-all
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install Protoc
-        run: sudo apt install protobuf-compiler
-
-      - name: Setup node
-        uses: actions/setup-node@v3
+      - name: Download build artifact
+        uses: actions/download-artifact@v3
         with:
-          node-version: 18
-          cache: 'yarn'
-
-      - name: Install Dependencies
-        run: yarn install --prefer-offline
-
-      - name: Generate google ads api from protos
-        run: yarn generate ${{ vars.GOOGLE_ADS_API_VERSION }}
-
-      - name: Build
-        run: yarn build
+          name: build 18
+          path: build
 
       - name: Publish
         uses: mikeal/merge-release@master

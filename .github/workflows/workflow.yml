@@ -1,0 +1,81 @@
+name: Generate google ads api and run tests
+
+env:
+  matrix: "[14, 16, 18]"
+
+on:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      environment:
+        description: 'The environment to deploy to'
+        required: true
+        type: string
+
+jobs:
+  test:
+    name: Node ${{ matrix.node }} testing
+    strategy:
+      matrix:
+        node: ${{ fromJSON(env.matrix) }}
+    uses: ./.github/workflows/template.yml
+    with:
+      environment: ${{ inputs.environment }}
+      node-version: ${{ matrix.node }}
+      google-ads-api-version: ${{ vars.GOOGLE_ADS_API_VERSION }}
+      test: true
+
+  coveralls:
+    name: Coveralls
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: ${{ fromJSON(env.matrix) }}
+    needs: test
+    steps:
+      - name: Download coverage artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: coverage ${{ matrix.node }}
+          path: coverage
+
+      - name: Write COVERALLS_TOKEN to .coveralls.yml
+        run: |
+          echo repo_token: ${{ secrets.COVERALLS_TOKEN }} > .coveralls.yml
+
+      - name: Coveralls
+        uses: pmienk/coveralls-github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          flag-name: ${{matrix.os}}-node-${{ matrix.node }}
+          parallel: true
+  
+  cleanup:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      deployments: write
+    steps:
+      - name: Coveralls finished
+        uses: pmienk/coveralls-github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel-finished: true
+          
+      - name: Delete previous deployments
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { data: deployments } = await github.repos.listDeployments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              environment: '${{ inputs.environment }}',
+            })
+
+            for (const deployment of deployments) {
+              await github.repos.deleteDeployment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                deployment_id: deployment.id,
+              })
+            }
