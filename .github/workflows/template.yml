@@ -3,10 +3,6 @@ name: Generate google ads api
 on:
   workflow_call:
     inputs:
-      environment:
-        description: 'The environment to use the variables from'
-        required: true
-        type: string
       node-version:
         description: 'The node version to use'
         required: true
@@ -30,7 +26,6 @@ jobs:
   generate:
     name: Generate google ads api ${{ inputs.google-ads-api-version }} for Node ${{ inputs.node-version }}
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}
     steps:
       - uses: actions/checkout@v3
 

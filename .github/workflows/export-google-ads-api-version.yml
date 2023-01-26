@@ -1,0 +1,22 @@
+name: Export google ads api version
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: 'The environment to deploy to'
+        required: true
+        type: string
+
+jobs:
+  export-google-ads-api-version:
+    name: Export google ads api version
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    outputs:
+      google-ads-api-version: ${{ steps.export-google-ads-api-version.outputs.GOOGLE_ADS_API_VERSION }}
+    steps:
+      - name: Export google ads api version
+        id: export-google-ads-api-version
+        run: |
+          echo "::set-output name=GOOGLE_ADS_API_VERSION::${{ vars.GOOGLE_ADS_API_VERSION }}"
