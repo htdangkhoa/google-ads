@@ -12,6 +12,8 @@ on:
 jobs:
   export-google-ads-api-version:
     uses: ./.github/workflows/export-google-ads-api-version.yml
+    with:
+      environment: ${{ inputs.environment }}
 
   test:
     name: Node ${{ matrix.node }} testing
