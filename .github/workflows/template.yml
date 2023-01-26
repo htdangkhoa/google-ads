@@ -1,61 +1,75 @@
-name: Generate google ads api and run tests
+name: Generate google ads api
 
 on:
   workflow_call:
     inputs:
-      environment:
-        description: 'The environment to deploy to'
+      node-version:
+        description: 'The node version to use'
         required: true
         type: string
+      google-ads-api-version:
+        description: 'The google ads api version to use'
+        required: true
+        type: string
+      test:
+        description: 'Whether to test'
+        required: false
+        type: boolean
+        default: false
+      build:
+        description: 'Whether to build the bundle'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
-  test:
-    name: Node ${{ matrix.node }} testing
+  generate:
+    name: Generate google ads api ${{ inputs.google-ads-api-version }} for Node ${{ inputs.node-version }}
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}
-    strategy:
-      matrix:
-        node: ['14', '16', '18']
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install Protoc
-        run: sudo apt install protobuf-compiler
+      - name: Install protobuf-compiler
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install protobuf-compiler -y
 
       - name: Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node }}
+          node-version: ${{ inputs.node-version }}
           cache: 'yarn'
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: yarn install --prefer-offline
 
       - name: Generate google ads api from protos
-        run: yarn generate ${{ vars.GOOGLE_ADS_API_VERSION }}
+        run: yarn generate ${{ inputs.google-ads-api-version }}
+
+      - name: Test
+        if: ${{ inputs.test }}
+        run: yarn test
 
       - name: Write COVERALLS_TOKEN to .coveralls.yml
+        if: ${{ inputs.test }}
         run: |
           echo repo_token: ${{ secrets.COVERALLS_TOKEN }} > .coveralls.yml
 
-      - name: Test
-        run: yarn test
-
       - name: Coveralls
+        if: ${{ inputs.test }}
         uses: pmienk/coveralls-github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           flag-name: ${{matrix.os}}-node-${{ matrix.node }}
           parallel: true
 
-  finish:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Coveralls Finished
-        uses: pmienk/coveralls-github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          parallel-finished: true
+      - name: Build
+        if: ${{ inputs.build }}
+        run: yarn build
 
-  
+      - name: Create build artifact
+        if: ${{ inputs.build }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: build ${{ inputs.node-version }}
+          path: build

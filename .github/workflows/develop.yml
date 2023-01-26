@@ -11,7 +11,14 @@ on:
 
 jobs:
   test:
-    name: Test
-    uses: ./.github/workflows/template.yml
+    name: Run tests
+    uses: ./.github/workflows/test.yml
+    with:
+      environment: development
+
+  cleanup:
+    name: Cleanup
+    needs: test
+    uses: ./.github/workflows/cleanup.yml
     with:
       environment: development

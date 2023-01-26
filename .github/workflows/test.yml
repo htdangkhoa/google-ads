@@ -1,0 +1,39 @@
+name: Generate google ads api and run tests
+
+on:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      environment:
+        description: 'The environment to deploy to'
+        required: true
+        type: string
+
+jobs:
+  export-google-ads-api-version:
+    uses: ./.github/workflows/export-google-ads-api-version.yml
+    with:
+      environment: ${{ inputs.environment }}
+
+  test:
+    name: Node ${{ matrix.node }} testing
+    needs: export-google-ads-api-version
+    strategy:
+      matrix:
+        node: [14, 16, 18]
+    uses: ./.github/workflows/template.yml
+    with:
+      node-version: ${{ matrix.node }}
+      google-ads-api-version: ${{ needs.export-google-ads-api-version.outputs.google-ads-api-version }}
+      test: true
+
+  coveralls:
+    name: Coveralls finished
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Coveralls finished
+        uses: pmienk/coveralls-github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel-finished: true
