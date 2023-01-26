@@ -2,7 +2,7 @@ name: Test on production
 
 on:
   workflow_dispatch:
-  push:
+  pull_request:
     branches:
       - main
 
@@ -13,43 +13,9 @@ jobs:
     with:
       environment: production
 
-  build:
-    needs: test
-    name: Build
-    uses: ./.github/workflows/template.yml
-    with:
-      environment: production
-      node-version: 18
-      google-ads-api-version: ${{ vars.GOOGLE_ADS_API_VERSION }}
-      test: false
-      build: true
-
-  publish:
-    name: Publish
-    needs: build
-    runs-on: ubuntu-latest
-    permissions: write-all
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Download build artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: build 18
-          path: build
-
-      - name: Publish
-        uses: mikeal/merge-release@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-
   cleanup:
     name: Cleanup
+    needs: test
     uses: ./.github/workflows/cleanup.yml
     with:
-      environment: development
+      environment: production

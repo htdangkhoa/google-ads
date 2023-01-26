@@ -23,4 +23,4 @@ jobs:
       - name: Export google ads api version
         id: export
         run: |
-          echo "::set-output name=GOOGLE_ADS_API_VERSION::${{ vars.GOOGLE_ADS_API_VERSION }}"
+          echo "GOOGLE_ADS_API_VERSION=${{ vars.GOOGLE_ADS_API_VERSION }}" >> $GITHUB_OUTPUT
