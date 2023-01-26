@@ -12,6 +12,6 @@ on:
 jobs:
   test:
     name: Run tests
-    uses: ./.github/workflows/workflow.yml
+    uses: ./.github/workflows/test.yml
     with:
       environment: development
