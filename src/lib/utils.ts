@@ -1,5 +1,5 @@
 import { credentials, OAuth2Client } from '@grpc/grpc-js';
-import { GoogleAdsFailure } from '../generated/google/ads/googleads/v12/errors/errors';
+import { GoogleAdsFailure } from '../generated/google/ads/googleads/v13/errors/errors';
 import { FAILURE_KEY } from './constants';
 
 export const getCredentials = (authClient: OAuth2Client) => {
