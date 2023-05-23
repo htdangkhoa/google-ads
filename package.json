@@ -1,7 +1,7 @@
 {
   "name": "@htdangkhoa/google-ads",
   "description": "Google Ads API client for Node.js",
-  "version": "0.0.0",
+  "version": "0.0.9",
   "homepage": "https://github.com/htdangkhoa/google-ads",
   "bugs": {
     "url": "https://github.com/htdangkhoa/google-ads/issues"
