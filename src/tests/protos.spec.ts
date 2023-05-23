@@ -1,7 +1,7 @@
-import { CustomerServiceClient } from '../generated/google/ads/googleads/v12/services/customer_service';
-import { GoogleAdsServiceClient } from '../generated/google/ads/googleads/v12/services/google_ads_service';
-import { Campaign } from '../generated/google/ads/googleads/v12/resources/campaign';
-import { AdvertisingChannelTypeEnum_AdvertisingChannelType } from '../generated/google/ads/googleads/v12/enums/advertising_channel_type';
+import { CustomerServiceClient } from '../generated/google/ads/googleads/v13/services/customer_service';
+import { GoogleAdsServiceClient } from '../generated/google/ads/googleads/v13/services/google_ads_service';
+import { Campaign } from '../generated/google/ads/googleads/v13/resources/campaign';
+import { AdvertisingChannelTypeEnum_AdvertisingChannelType } from '../generated/google/ads/googleads/v13/enums/advertising_channel_type';
 import { MOCK_ADDRESS, MOCK_CREDENTIALS } from './test-utils';
 
 describe('CustomerServiceClient', () => {

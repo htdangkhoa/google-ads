@@ -3,7 +3,7 @@
 version=$1
 
 if [ -z "$version" ]; then
-    echo "Version is required! Usage: generate.sh v12"
+    echo "Version is required! Usage: generate.sh v13"
     exit 1
 fi
 
