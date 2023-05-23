@@ -38,11 +38,10 @@ jobs:
           path: build
 
       - name: Publish
-        id: publish
-        uses: JS-DevTools/npm-publish@v2
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
-          strategy: upgrade
+        uses: mikeal/merge-release@7f590a5adf6e9def8e399a0a569d22d0de016dc0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       
       - name: Release
         uses: softprops/action-gh-release@v1
