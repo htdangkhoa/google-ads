@@ -6,7 +6,7 @@ import { CustomerServiceClient } from '../generated/google';
 import {
   ListAccessibleCustomersRequest,
   ListAccessibleCustomersResponse,
-} from '../generated/google/ads/googleads/v13/services/customer_service';
+} from '../generated/google/ads/googleads/v14/services/customer_service';
 
 export class Customer extends Service {
   protected get callMetadata(): Metadata {
