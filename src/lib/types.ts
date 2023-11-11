@@ -1,4 +1,4 @@
-import { OAuth2Client } from '@grpc/grpc-js';
+import { Interceptor as GRPCInterceptor, OAuth2Client } from '@grpc/grpc-js';
 import allProtos from '../generated/google';
 import { VERSION } from './constants';
 
@@ -8,9 +8,15 @@ export type OptionalExceptFor<T, TRequired extends keyof T> = Partial<T> &
 export type AllServices = Omit<typeof allProtos, typeof VERSION>;
 export type ServiceName = keyof Omit<typeof allProtos, typeof VERSION>;
 
+export type LoggingOptions = {
+  summary?: boolean;
+  detail?: boolean;
+};
+
 export interface ServiceOptions {
   auth: OAuth2Client;
   developer_token: string;
+  logging?: boolean | LoggingOptions;
 }
 
 export interface CustomerOptions {
@@ -79,4 +85,8 @@ export interface Condition {
 export interface OrderBy {
   attribute: string;
   direction?: OrderDirection;
+}
+
+export interface Interceptor {
+  interceptCall: GRPCInterceptor;
 }
