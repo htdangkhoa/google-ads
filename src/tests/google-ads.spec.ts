@@ -1,11 +1,11 @@
 import { status, Metadata, ServiceError } from '@grpc/grpc-js';
-import { AuthenticationErrorEnum_AuthenticationError } from '../generated/google/ads/googleads/v13/errors/authentication_error';
+import { AuthenticationErrorEnum_AuthenticationError } from '../generated/google/ads/googleads/v14/errors/authentication_error';
 import {
   ErrorCode,
   GoogleAdsFailure,
-} from '../generated/google/ads/googleads/v13/errors/errors';
-import { RequestErrorEnum_RequestError } from '../generated/google/ads/googleads/v13/errors/request_error';
-import { GoogleAdsRow } from '../generated/google/ads/googleads/v13/services/google_ads_service';
+} from '../generated/google/ads/googleads/v14/errors/errors';
+import { RequestErrorEnum_RequestError } from '../generated/google/ads/googleads/v14/errors/request_error';
+import { GoogleAdsRow } from '../generated/google/ads/googleads/v14/services/google_ads_service';
 import { Status } from '../generated/google/rpc/status';
 import { FAILURE_KEY, QueryBuilder, VERSION } from '../lib';
 import { GoogleAds } from '../lib/GoogleAds';
@@ -148,7 +148,7 @@ describe('searchStream', () => {
       const { value, done } = await stream.next();
       if (done) break;
       const results =
-        value.results?.map?.((result) => result).filter(Boolean) ?? [];
+        value.results?.map?.((result: any) => result).filter(Boolean) ?? [];
       campaigns.push(...results);
     }
 

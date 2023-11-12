@@ -17,7 +17,7 @@ jobs:
     needs: export-google-ads-api-version
     uses: ./.github/workflows/template.yml
     with:
-      node-version: 18
+      node-version: 20
       google-ads-api-version: ${{ needs.export-google-ads-api-version.outputs.google-ads-api-version }}
       test: false
       build: true
@@ -34,13 +34,13 @@ jobs:
       - name: Download build artifact
         uses: actions/download-artifact@v3
         with:
-          name: build 18
+          name: build 20
           path: build
 
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
           registry-url: 'https://registry.npmjs.org'
 
       - name: Publish

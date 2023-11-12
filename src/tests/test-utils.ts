@@ -1,8 +1,8 @@
 import { credentials, Metadata, ServiceError } from '@grpc/grpc-js';
 import { google } from 'googleapis';
-import { AdGroupStatusEnum_AdGroupStatus } from '../generated/google/ads/googleads/v13/enums/ad_group_status';
-import { AdGroupTypeEnum_AdGroupType } from '../generated/google/ads/googleads/v13/enums/ad_group_type';
-import { ListAccessibleCustomersResponse } from '../generated/google/ads/googleads/v13/services/customer_service';
+import { AdGroupStatusEnum_AdGroupStatus } from '../generated/google/ads/googleads/v14/enums/ad_group_status';
+import { AdGroupTypeEnum_AdGroupType } from '../generated/google/ads/googleads/v14/enums/ad_group_type';
+import { ListAccessibleCustomersResponse } from '../generated/google/ads/googleads/v14/services/customer_service';
 import {
   GoogleAdsRow,
   MutateGoogleAdsRequest,
@@ -13,7 +13,7 @@ import {
   SearchGoogleAdsResponse,
   SearchGoogleAdsStreamRequest,
   SearchGoogleAdsStreamResponse,
-} from '../generated/google/ads/googleads/v13/services/google_ads_service';
+} from '../generated/google/ads/googleads/v14/services/google_ads_service';
 import { AllServices, Customer, GoogleAds, Service, ServiceName } from '../lib';
 
 export const MOCK_ADDRESS = 'googleads.googleapis.com';

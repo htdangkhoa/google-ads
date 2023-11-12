@@ -7,6 +7,7 @@ module.exports = {
     '/build/',
     '/src/generated/',
     '/src/tests/',
+    '/src/lib/LoggingInterceptor.ts',
     'jest.config.js',
   ],
   testPathIgnorePatterns: ['/node_modules/', '/build/'],
