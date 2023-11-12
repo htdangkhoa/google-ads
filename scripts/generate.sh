@@ -18,11 +18,6 @@ if [ ! -d "$path/.git" ]; then
   git clone https://github.com/googleapis/googleapis.git "$path"
 fi
 
-if [ -d "node_modules/patch-package" ]; then
-  echo 'Patch package "ts-proto" with local changes'
-  patch-package
-fi
-
 mkdir -p $outdir
 
 echo 'Generating Protobuf files'
