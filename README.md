@@ -1,8 +1,8 @@
 <h1 align="center">Google Ads API Nodejs Client Library</h1>
 
 <p align="center">
-  <a href="https://developers.google.com/google-ads/api/docs/release-notes#v14">
-    <img src="https://img.shields.io/badge/google%20ads-v14-009688.svg?style=flat-square">
+  <a href="https://developers.google.com/google-ads/api/docs/release-notes#v15">
+    <img src="https://img.shields.io/badge/google%20ads-v15-009688.svg?style=flat-square">
   </a>
   <a href="https://www.npmjs.com/package/@htdangkhoa/google-ads">
     <img src="https://img.shields.io/npm/v/@htdangkhoa/google-ads.svg?style=flat-square">
@@ -234,19 +234,18 @@ const response = await service.search({ query });
     # example
     yarn generate v13
     ```
+3. Make sure the version number in the `src` folder is correct (it should match the version number you passed to the `generate` command)
 
-3. Run tests to make sure everything worked (you may need to update the version numbers here)
+4. Run tests to make sure everything worked (you may need to update the version numbers here)
 
     ```sh
     yarn test
     ```
 
-4. Build the library
+5. Build the library
 
     ```sh
     yarn build
     ```
 
-5. Make a pull request, get it approved and merged into master
-
-6. Publish to npm
+6. Make a pull request, get it approved and merged into `main`
