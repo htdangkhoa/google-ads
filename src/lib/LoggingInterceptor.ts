@@ -12,7 +12,7 @@ import {
   NextCall,
   RequesterBuilder,
 } from '@grpc/grpc-js/build/src/client-interceptors';
-import log4js from 'log4js';
+import * as log4js from 'log4js';
 import type { Logger } from 'log4js';
 import { Interceptor, LoggingOptions } from './types';
 import { HOST } from './constants';
@@ -51,7 +51,7 @@ export class LoggingInterceptor implements Interceptor {
         out: { type: 'stdout' },
       },
       categories: {
-        default: { appenders: ['out'], level: 'info' },
+        default: { appenders: ['out'], level: 'trace' },
       },
     });
     this.summaryLogger = log4js.getLogger('Google::Ads::GoogleAds::Summary');
