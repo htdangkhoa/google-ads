@@ -218,6 +218,52 @@ const query = new QueryBuilder()
 const response = await service.search({ query });
 ```
 
+## Logging
+
+Requests are logged with a one line summary and the full request/response body and headers.
+
+| Log type | Log name                        | Success level | Failure level |
+|----------|---------------------------------|---------------|---------------|
+| SUMMARY  | Google::Ads::GoogleAds::Summary | INFO          | WARN          |
+| DETAIL   | Google::Ads::GoogleAds::Detail  | DEBUG         | INFO          |
+
+### Basic
+
+```ts
+import { GoogleAds } from '@htdangkhoa/google-ads';
+
+const service = new GoogleAds(
+  {
+    auth: authClient,
+    developer_token: '<DEVELOPER_TOKEN>',
+    logging: true,
+  },
+  {
+    customer_id: '<CUSTOMER_ID>',
+  },
+);
+```
+
+### Specific Log Type (SUMMARY or DETAIL)
+
+```ts
+import { GoogleAds } from '@htdangkhoa/google-ads';
+
+const service = new GoogleAds(
+  {
+    auth: authClient,
+    developer_token: '<DEVELOPER_TOKEN>',
+    logging: {
+      summary: true,
+      detail: false,
+    },
+  },
+  {
+    customer_id: '<CUSTOMER_ID>',
+  },
+);
+```
+
 ## Development
 
 1. Install dependencies
