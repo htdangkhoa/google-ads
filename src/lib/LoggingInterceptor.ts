@@ -51,7 +51,7 @@ export class LoggingInterceptor implements Interceptor {
         out: { type: 'stdout' },
       },
       categories: {
-        default: { appenders: ['out'], level: 'info' },
+        default: { appenders: ['out'], level: 'trace' },
       },
     });
     this.summaryLogger = log4js.getLogger('Google::Ads::GoogleAds::Summary');
