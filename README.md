@@ -264,7 +264,7 @@ const service = new GoogleAds(
 );
 ```
 
-## GRPC Client Options
+## gRPC Client Options
 
 The `ServiceOptions` is extended from `@grpc/grpc-js` [ClientOptions](https://grpc.github.io/grpc/node/grpc.Client.html#~ClientOptions:~:text=to%20the%20server-,options,-Object), so you can pass any options you want to the client.
 
@@ -295,7 +295,7 @@ See more at [Node.js gRPC Library](https://grpc.github.io/grpc/node/module-src_c
 
 ## Development
 
-### Pre-requisites
+### Prerequisites
 
 - Protocol Buffer Compiler (protoc) version 3.0.0 or greater. The latest version can be downloaded from [here](https://grpc.io/docs/protoc-installation/)
 - Node.js version 14 or greater (LTS recommended) and npm version 6 or greater. The latest version of Node.js can be downloaded from [here](https://nodejs.org/en/download/)
