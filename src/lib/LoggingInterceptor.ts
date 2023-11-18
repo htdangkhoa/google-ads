@@ -48,7 +48,7 @@ export class LoggingInterceptor implements Interceptor {
 
     log4js.configure({
       appenders: {
-        out: { type: 'stdout' },
+        out: { type: 'stdout', layout: { type: 'basic' } },
       },
       categories: {
         default: { appenders: ['out'], level: 'trace' },

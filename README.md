@@ -264,7 +264,43 @@ const service = new GoogleAds(
 );
 ```
 
+## gRPC Client Options
+
+The `ServiceOptions` is extended from `@grpc/grpc-js` [ClientOptions](https://grpc.github.io/grpc/node/grpc.Client.html#~ClientOptions:~:text=to%20the%20server-,options,-Object), so you can pass any options you want to the client.
+
+```ts
+import { GoogleAds } from '@htdangkhoa/google-ads';
+
+const service = new GoogleAds(
+  {
+    auth: authClient,
+    developer_token: '<DEVELOPER_TOKEN>',
+    logging: {
+      summary: true,
+      detail: false,
+    },
+    interceptors: [
+      // your interceptors
+    ],
+  },
+  {
+    customer_id: '<CUSTOMER_ID>',
+  },
+);
+```
+
+## Interceptors
+
+See more at [Node.js gRPC Library](https://grpc.github.io/grpc/node/module-src_client_interceptors.html) and some examples [here](https://github.com/grpc/proposal/blob/master/L5-node-client-interceptors.md).
+
 ## Development
+
+### Prerequisites
+
+- Protocol Buffer Compiler (protoc) version 3.0.0 or greater. The latest version can be downloaded from [here](https://grpc.io/docs/protoc-installation/)
+- Node.js version 14 or greater (LTS recommended) and npm version 6 or greater. The latest version of Node.js can be downloaded from [here](https://nodejs.org/en/download/)
+
+### Building
 
 1. Install dependencies
 
@@ -275,10 +311,10 @@ const service = new GoogleAds(
 2. Pull in the new protos and compile them
 
     ```sh
-    yarn generate <GOOGLE_API_VERSION>
+    yarn generate <GOOGLE_ADS_API_VERSION>
 
     # example
-    yarn generate v13
+    yarn generate v15
     ```
 3. Make sure the version number in the `src` folder is correct (it should match the version number you passed to the `generate` command)
 

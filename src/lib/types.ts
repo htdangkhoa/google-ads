@@ -1,4 +1,8 @@
-import { Interceptor as GRPCInterceptor, OAuth2Client } from '@grpc/grpc-js';
+import {
+  ClientOptions,
+  Interceptor as GRPCInterceptor,
+  OAuth2Client,
+} from '@grpc/grpc-js';
 import allProtos from '../generated/google';
 import { VERSION } from './constants';
 
@@ -13,7 +17,7 @@ export type LoggingOptions = {
   detail?: boolean;
 };
 
-export interface ServiceOptions {
+export interface ServiceOptions extends ClientOptions {
   auth: OAuth2Client;
   developer_token: string;
   logging?: boolean | LoggingOptions;

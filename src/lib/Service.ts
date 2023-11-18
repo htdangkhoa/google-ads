@@ -28,11 +28,20 @@ export class Service extends ServiceProvider {
 
     const { [serviceName]: ProtoService } = require('../generated/google');
 
-    const credentials = getCredentials(this.options.auth);
+    const {
+      auth,
+      developer_token,
+      logging,
+      interceptors = [],
+      ...opts
+    } = this.options;
+    const credentials = getCredentials(auth);
 
     const client = new ProtoService(HOST, credentials, {
+      ...opts,
       interceptors: [
-        new LoggingInterceptor(this.options.logging || false).interceptCall,
+        new LoggingInterceptor(logging || false).interceptCall,
+        ...interceptors,
       ],
     });
 
