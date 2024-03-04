@@ -1,8 +1,8 @@
 import { google } from 'googleapis';
 
 import { GoogleAds } from '../src/lib';
-import { Asset } from '../src/generated/google/ads/googleads/v15/resources/asset';
-import { MutateOperation } from '../src/generated/google/ads/googleads/v15/services/google_ads_service';
+import { Asset } from '../src/generated/google/ads/googleads/v16/resources/asset';
+import { MutateOperation } from '../src/generated/google/ads/googleads/v16/services/google_ads_service';
 
 const authClient = new google.auth.JWT({
   keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
