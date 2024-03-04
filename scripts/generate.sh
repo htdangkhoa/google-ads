@@ -16,6 +16,11 @@ rm -rf $outdir
 if [ ! -d "$path/.git" ]; then
   echo 'Cloning Git repository'
   git clone https://github.com/googleapis/googleapis.git "$path"
+else 
+  echo 'Pulling latest changes'
+  cd $path
+  git pull
+  cd -
 fi
 
 mkdir -p $outdir
