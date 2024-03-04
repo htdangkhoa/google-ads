@@ -12,7 +12,7 @@ import {
   SearchGoogleAdsStreamResponse,
   MutateGoogleAdsRequest,
   MutateGoogleAdsResponse,
-} from '../generated/google/ads/googleads/v15/services/google_ads_service';
+} from '../generated/google/ads/googleads/v16/services/google_ads_service';
 
 export class GoogleAds extends Service {
   private customerOptions: CustomerOptions;
