@@ -10,6 +10,9 @@
   <a href='https://coveralls.io/github/htdangkhoa/google-ads'>
     <img src='https://img.shields.io/coverallsCoverage/github/htdangkhoa/google-ads?style=flat-square' alt='Coverage Status' />
   </a>
+  <a href='https://depfu.com/github/htdangkhoa/google-ads?project_id=40063'>
+    <img src='https://badges.depfu.com/badges/b81badee90e335b411e120d083f3c154/count.svg' alt='depfu' />
+  </a>
 </p>
 
 ## Usage
