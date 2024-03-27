@@ -28,10 +28,10 @@
     "generate": "./scripts/generate.sh"
   },
   "dependencies": {
-    "@grpc/grpc-js": "^1.9.9",
+    "@grpc/grpc-js": "^1.10.4",
     "deepmerge": "^4.3.1",
     "log4js": "^6.9.1",
-    "protobufjs": "^7.2.5"
+    "protobufjs": "^7.2.6"
   },
   "devDependencies": {
     "@types/glob": "^8.1.0",
