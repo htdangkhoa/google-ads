@@ -20,7 +20,7 @@ jobs:
     needs: export-google-ads-api-version
     strategy:
       matrix:
-        node: [14, 16, 18, 20]
+        node: [16, 18, 20]
     uses: ./.github/workflows/template.yml
     with:
       node-version: ${{ matrix.node }}
