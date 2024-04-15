@@ -44,7 +44,7 @@
     "rimraf": "^5.0.5",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
-    "ts-proto": "^1.170.0",
+    "ts-proto": "^1.172.0",
     "typescript": "5.4.3"
   },
   "publishConfig": {
