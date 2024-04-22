@@ -50,6 +50,14 @@ jobs:
         if: ${{ inputs.test }}
         run: yarn test
 
+      - name: Test report with Node ${{ inputs.node-version }} and Google Ads API ${{ inputs.google-ads-api-version }}
+        uses: dorny/test-reporter@v1
+        if: ${{ inputs.test }} && always()
+        with:
+          name: Test report with Node ${{ inputs.node-version }} and Google Ads API ${{ inputs.google-ads-api-version }}
+          path: junit.xml
+          reporter: jest-junit
+
       - name: Write COVERALLS_TOKEN to .coveralls.yml
         if: ${{ inputs.test }}
         run: |

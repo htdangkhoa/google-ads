@@ -12,4 +12,5 @@ module.exports = {
   ],
   testPathIgnorePatterns: ['/node_modules/', '/build/'],
   testTimeout: 20000,
+  reporters: ['default', 'jest-junit'],
 };
