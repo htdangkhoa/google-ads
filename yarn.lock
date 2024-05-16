@@ -2801,10 +2801,10 @@ ts-proto-descriptors@1.15.0:
     long "^5.2.3"
     protobufjs "^7.2.4"
 
-ts-proto@^1.170.0:
-  version "1.170.0"
-  resolved "https://registry.yarnpkg.com/ts-proto/-/ts-proto-1.170.0.tgz#9dd270db171cf20e922cd389e8cc274564228a3f"
-  integrity sha512-5ntOSpzJ4n5sGS/kmXU1P6Yaf6Q9HFwggjSDSr0bVCC2bl3fJUj3qsCJvnjbortKf3rUytwnSY8yM8wnc4LS1Q==
+ts-proto@^1.175.1:
+  version "1.175.1"
+  resolved "https://registry.yarnpkg.com/ts-proto/-/ts-proto-1.175.1.tgz#55046abc9eaf8d2240f1d2f22ba1c3b3b5a84a3c"
+  integrity sha512-8SX3Q0cnF49XvXYQoVKVRd8svd2AROUUp1mt3ya+8eZZ5rtK4ny0dfBGuiY3tkwEZaeAwUX7OghXe3vMF4HG3g==
   dependencies:
     case-anything "^2.1.13"
     protobufjs "^7.2.4"
