@@ -31,7 +31,7 @@
     "@grpc/grpc-js": "^1.10.4",
     "deepmerge": "^4.3.1",
     "log4js": "^6.9.1",
-    "protobufjs": "^7.2.6"
+    "protobufjs": "^7.3.2"
   },
   "devDependencies": {
     "@types/glob": "^8.1.0",
