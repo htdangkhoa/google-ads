@@ -37,6 +37,7 @@ protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto \
   --ts_proto_opt=useAbortSignal=true \
   --ts_proto_opt=useExactTypes=false \
   --ts_proto_opt=esModuleInterop=true \
+  --ts_proto_opt=importSuffix=.js \
   --ts_proto_opt=outputServices=generic-definitions,outputServices=grpc-js \
   $path/google/ads/googleads/$version/**/*.proto
 
