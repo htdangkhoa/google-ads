@@ -21,6 +21,7 @@ jobs:
       google-ads-api-version: ${{ needs.export-google-ads-api-version.outputs.google-ads-api-version }}
       test: false
       build: true
+      import-suffix: .js
 
   publish:
     name: Publish
