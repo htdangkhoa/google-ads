@@ -15,16 +15,24 @@
     "huynhtran.dangkhoa@gmail.com"
   ],
   "license": "MIT",
-  "main": "build/lib/index.js",
+  "main": "dist/cjs/lib/index.js",
+  "module": "dist/esm/lib/index.js",
   "files": [
-    "build/lib",
-    "build/generated"
+    "dist"
   ],
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./dist/esm/lib/index.js",
+      "require": "./dist/cjs/lib/index.js"
+    }
+  },
   "scripts": {
     "test": "jest --runInBand --no-cache",
     "test:cov": "npm run test && coveralls < coverage/lcov.info",
-    "prebuild": "rimraf build",
+    "prebuild": "rimraf dist",
     "build": "tsc",
+    "postbuild": "esm2cjs --in dist/esm --out dist/cjs -l error",
     "generate": "./scripts/generate.sh"
   },
   "dependencies": {
@@ -34,6 +42,7 @@
     "protobufjs": "^7.2.6"
   },
   "devDependencies": {
+    "@alcalzone/esm2cjs": "^1.1.2",
     "@types/glob": "^8.1.0",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.30",
