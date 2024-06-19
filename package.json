@@ -15,14 +15,16 @@
     "huynhtran.dangkhoa@gmail.com"
   ],
   "license": "MIT",
-  "main": "dist/cjs/lib/index.js",
-  "module": "dist/esm/lib/index.js",
+  "main": "./dist/cjs/lib/index.js",
+  "module": "./dist/esm/lib/index.js",
+  "types": "./dist/types/lib/index.d.ts",
   "files": [
     "dist"
   ],
   "exports": {
     "./package.json": "./package.json",
     ".": {
+      "types": "./dist/types/lib/index.d.ts",
       "import": "./dist/esm/lib/index.js",
       "require": "./dist/cjs/lib/index.js"
     }
