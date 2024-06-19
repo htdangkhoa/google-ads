@@ -27,7 +27,7 @@ jobs:
     name: Generate google ads api ${{ inputs.google-ads-api-version }} for Node ${{ inputs.node-version }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install protobuf-compiler
         run: |
@@ -35,7 +35,7 @@ jobs:
           sudo apt-get install protobuf-compiler -y
 
       - name: Setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.node-version }}
           cache: 'yarn'
@@ -49,6 +49,14 @@ jobs:
       - name: Test
         if: ${{ inputs.test }}
         run: yarn test
+
+      - name: Test report with Node ${{ inputs.node-version }} and Google Ads API ${{ inputs.google-ads-api-version }}
+        uses: dorny/test-reporter@v1
+        if: ${{ inputs.test }} && always()
+        with:
+          name: Test report with Node ${{ inputs.node-version }} and Google Ads API ${{ inputs.google-ads-api-version }}
+          path: junit.xml
+          reporter: jest-junit
 
       - name: Write COVERALLS_TOKEN to .coveralls.yml
         if: ${{ inputs.test }}

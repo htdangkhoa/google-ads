@@ -1,15 +1,14 @@
 import { status, Metadata, ServiceError } from '@grpc/grpc-js';
-import { AuthenticationErrorEnum_AuthenticationError } from '../generated/google/ads/googleads/v16/errors/authentication_error';
+import { AuthenticationErrorEnum_AuthenticationError } from '../generated/google/ads/googleads/v17/errors/authentication_error';
 import {
   ErrorCode,
   GoogleAdsFailure,
-} from '../generated/google/ads/googleads/v16/errors/errors';
-import { RequestErrorEnum_RequestError } from '../generated/google/ads/googleads/v16/errors/request_error';
-import { GoogleAdsRow } from '../generated/google/ads/googleads/v16/services/google_ads_service';
+} from '../generated/google/ads/googleads/v17/errors/errors';
+import { RequestErrorEnum_RequestError } from '../generated/google/ads/googleads/v17/errors/request_error';
+import { GoogleAdsRow } from '../generated/google/ads/googleads/v17/services/google_ads_service';
 import { Status } from '../generated/google/rpc/status';
 import { FAILURE_KEY, QueryBuilder, VERSION } from '../lib';
-import { GoogleAds } from '../lib/GoogleAds';
-import { getGoogleAdsError } from '../lib/utils';
+import { decodePartialFailureError, getGoogleAdsError } from '../lib/utils';
 import {
   MockGoogleAds,
   MOCK_AD_GROUP_OPERATIONS,
@@ -171,48 +170,199 @@ describe('mutate', () => {
     expect(mutate_operation_responses).toEqual(MOCK_AD_GROUP_RESULTS);
   });
 
-  it('should decode partial failure errors if present on the response', async () => {
-    const failureMessage = GoogleAdsFailure.fromPartial({
-      errors: [
-        {
-          error_code: ErrorCode.fromPartial({
-            request_error: RequestErrorEnum_RequestError.BAD_RESOURCE_ID,
-          }),
-          message: 'error message',
-          location: {
-            field_path_elements: [
-              {
-                field_name: 'fake field',
-                index: 0,
-              },
-            ],
+  describe('partial failure', () => {
+    it('should decode partial failure errors if present on the response', async () => {
+      const failureMessage = GoogleAdsFailure.fromPartial({
+        errors: [
+          {
+            error_code: ErrorCode.fromPartial({
+              request_error: RequestErrorEnum_RequestError.BAD_RESOURCE_ID,
+            }),
+            message: 'error message',
+            location: {
+              field_path_elements: [
+                {
+                  field_name: 'fake field',
+                  index: 0,
+                },
+              ],
+            },
           },
-        },
-      ],
+        ],
+      });
+
+      const failureBuffer = GoogleAdsFailure.encode(failureMessage).finish();
+
+      const response = await service
+        .setCustomerId(MOCK_CUSTOMER_ID)
+        .setLoginCustomerId(MOCK_MANAGER_ID)
+        .mockMutate(
+          {
+            mutate_operations: MOCK_AD_GROUP_OPERATIONS,
+            partial_failure: true,
+          },
+          {
+            mutate_operation_responses: [],
+            partial_failure_error: Status.fromPartial({
+              details: [
+                {
+                  type_url: `google.ads.googleads.${VERSION}.errors.GoogleAdsFailure`,
+                  value: failureBuffer,
+                },
+              ],
+            }),
+          },
+        );
+
+      const { partial_failure_error } = response;
+
+      expect(partial_failure_error?.details?.[0].value).toBe(failureBuffer);
     });
 
-    const failureBuffer = GoogleAdsFailure.encode(failureMessage).finish();
+    describe('decode partial failure error', () => {
+      it('should return original response if no partial failure error', async () => {
+        const response = await service
+          .setCustomerId(MOCK_CUSTOMER_ID)
+          .setLoginCustomerId(MOCK_MANAGER_ID)
+          .mockMutate(
+            {
+              mutate_operations: MOCK_AD_GROUP_OPERATIONS,
+              partial_failure: false,
+            },
+            {
+              mutate_operation_responses: MOCK_AD_GROUP_RESULTS,
+            },
+          );
 
-    const { partial_failure_error } = await service
-      .setCustomerId(MOCK_CUSTOMER_ID)
-      .setLoginCustomerId(MOCK_MANAGER_ID)
-      .mockMutate(
-        {
-          mutate_operations: MOCK_AD_GROUP_OPERATIONS,
-          partial_failure: true,
-        },
-        {
-          partial_failure_error: Status.fromPartial({
-            details: [
-              {
-                type_url: `google.ads.googleads.${VERSION}.errors.GoogleAdsFailure`,
-                value: failureBuffer,
+        const parsedPartialFailureResponse =
+          decodePartialFailureError(response);
+
+        expect(parsedPartialFailureResponse).toEqual(response);
+      });
+
+      it('should return original response if no details', async () => {
+        const response = await service
+          .setCustomerId(MOCK_CUSTOMER_ID)
+          .setLoginCustomerId(MOCK_MANAGER_ID)
+          .mockMutate(
+            {
+              mutate_operations: MOCK_AD_GROUP_OPERATIONS,
+              partial_failure: false,
+            },
+            {
+              mutate_operation_responses: MOCK_AD_GROUP_RESULTS,
+              partial_failure_error: {},
+            },
+          );
+
+        const parsedPartialFailureResponse =
+          decodePartialFailureError(response);
+
+        expect(parsedPartialFailureResponse).toEqual(response);
+      });
+
+      it('should return original response if no value in details', async () => {
+        const response = await service
+          .setCustomerId(MOCK_CUSTOMER_ID)
+          .setLoginCustomerId(MOCK_MANAGER_ID)
+          .mockMutate(
+            {
+              mutate_operations: MOCK_AD_GROUP_OPERATIONS,
+              partial_failure: false,
+            },
+            {
+              mutate_operation_responses: MOCK_AD_GROUP_RESULTS,
+              partial_failure_error: {
+                details: [],
               },
-            ],
-          }),
-        },
-      );
+            },
+          );
 
-    expect(partial_failure_error?.details?.[0].value).toBe(failureBuffer);
+        const parsedPartialFailureResponse =
+          decodePartialFailureError(response);
+
+        expect(parsedPartialFailureResponse).toEqual(response);
+      });
+
+      it('should return original response if no type_url in details', async () => {
+        const response = await service
+          .setCustomerId(MOCK_CUSTOMER_ID)
+          .setLoginCustomerId(MOCK_MANAGER_ID)
+          .mockMutate(
+            {
+              mutate_operations: MOCK_AD_GROUP_OPERATIONS,
+              partial_failure: false,
+            },
+            {
+              mutate_operation_responses: MOCK_AD_GROUP_RESULTS,
+              partial_failure_error: {
+                details: [
+                  {
+                    // @ts-expect-error
+                    value: 'fake value',
+                  },
+                ],
+              },
+            },
+          );
+
+        const parsedPartialFailureResponse =
+          decodePartialFailureError(response);
+
+        expect(parsedPartialFailureResponse).toEqual(response);
+      });
+
+      it('should return the errors for partial failure', async () => {
+        const failureMessage = GoogleAdsFailure.fromPartial({
+          errors: [
+            {
+              error_code: ErrorCode.fromPartial({
+                request_error: RequestErrorEnum_RequestError.BAD_RESOURCE_ID,
+              }),
+              message: 'error message',
+              location: {
+                field_path_elements: [
+                  {
+                    field_name: 'fake field',
+                    index: 0,
+                  },
+                ],
+              },
+            },
+          ],
+        });
+
+        const failureBuffer = GoogleAdsFailure.encode(failureMessage).finish();
+
+        const response = await service
+          .setCustomerId(MOCK_CUSTOMER_ID)
+          .setLoginCustomerId(MOCK_MANAGER_ID)
+          .mockMutate(
+            {
+              mutate_operations: MOCK_AD_GROUP_OPERATIONS,
+              partial_failure: true,
+            },
+            {
+              mutate_operation_responses: [],
+              partial_failure_error: Status.fromPartial({
+                details: [
+                  {
+                    type_url: `google.ads.googleads.${VERSION}.errors.GoogleAdsFailure`,
+                    value: failureBuffer,
+                  },
+                ],
+              }),
+            },
+          );
+
+        const parsedPartialFailureResponse =
+          decodePartialFailureError(response);
+
+        expect(parsedPartialFailureResponse).toEqual({
+          mutate_operation_responses: [],
+          partial_failure_error: failureMessage,
+        });
+      });
+    });
   });
 });
