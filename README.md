@@ -1,8 +1,8 @@
 <h1 align="center">Google Ads API Nodejs Client Library</h1>
 
 <p align="center">
-  <a href="https://developers.google.com/google-ads/api/docs/release-notes#v16">
-    <img src="https://img.shields.io/badge/google%20ads-v16-009688.svg?style=flat-square">
+  <a href="https://developers.google.com/google-ads/api/docs/release-notes#v17">
+    <img src="https://img.shields.io/badge/google%20ads-v17-009688.svg?style=flat-square">
   </a>
   <a href="https://www.npmjs.com/package/@htdangkhoa/google-ads">
     <img src="https://img.shields.io/npm/v/@htdangkhoa/google-ads.svg?style=flat-square">
@@ -317,7 +317,7 @@ See more at [Node.js gRPC Library](https://grpc.github.io/grpc/node/module-src_c
     yarn generate <GOOGLE_ADS_API_VERSION>
 
     # example
-    yarn generate v16
+    yarn generate v17
     ```
 3. Make sure the version number in the `src` folder is correct (it should match the version number you passed to the `generate` command)
 
