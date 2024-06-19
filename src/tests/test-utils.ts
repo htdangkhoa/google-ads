@@ -124,7 +124,7 @@ export class MockGoogleAds extends GoogleAds {
     request: SearchGoogleAdsStreamRequest,
     mockResponse: SearchGoogleAdsStreamResponse,
     metadata?: Metadata | undefined,
-  ): AsyncGenerator<SearchGoogleAdsStreamResponse, void, unknown> {
+  ): AsyncGenerator<SearchGoogleAdsStreamResponse, any, unknown> {
     const stream = super.searchStream(request, metadata);
 
     try {

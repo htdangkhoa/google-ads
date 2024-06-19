@@ -21,6 +21,11 @@ on:
         required: false
         type: boolean
         default: false
+      import-suffix:
+        description: 'ts-proto will emit file imports using the specified suffix'
+        required: false
+        type: string
+        default: ''
 
 jobs:
   generate:
@@ -44,19 +49,11 @@ jobs:
         run: yarn install --prefer-offline
 
       - name: Generate google ads api from protos
-        run: yarn generate ${{ inputs.google-ads-api-version }}
+        run: yarn generate ${{ inputs.google-ads-api-version }} ${{ inputs.import-suffix }}
 
       - name: Test
         if: ${{ inputs.test }}
         run: yarn test
-
-      - name: Test report with Node ${{ inputs.node-version }} and Google Ads API ${{ inputs.google-ads-api-version }}
-        uses: dorny/test-reporter@v1
-        if: ${{ inputs.test }} && always()
-        with:
-          name: Test report with Node ${{ inputs.node-version }} and Google Ads API ${{ inputs.google-ads-api-version }}
-          path: junit.xml
-          reporter: jest-junit
 
       - name: Write COVERALLS_TOKEN to .coveralls.yml
         if: ${{ inputs.test }}
@@ -80,4 +77,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: build ${{ inputs.node-version }}
-          path: build
+          path: dist

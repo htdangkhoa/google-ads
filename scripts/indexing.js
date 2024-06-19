@@ -1,5 +1,5 @@
-const glob = require('glob').globSync;
-const fs = require('fs');
+import { globSync as glob } from 'glob';
+import fs from 'fs';
 
 const [path, version] = process.argv.slice(2);
 
