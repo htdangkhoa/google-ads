@@ -1,11 +1,11 @@
 import { status, Metadata, ServiceError } from '@grpc/grpc-js';
-import { AuthenticationErrorEnum_AuthenticationError } from '../generated/google/ads/googleads/v16/errors/authentication_error';
+import { AuthenticationErrorEnum_AuthenticationError } from '../generated/google/ads/googleads/v17/errors/authentication_error';
 import {
   ErrorCode,
   GoogleAdsFailure,
-} from '../generated/google/ads/googleads/v16/errors/errors';
-import { RequestErrorEnum_RequestError } from '../generated/google/ads/googleads/v16/errors/request_error';
-import { GoogleAdsRow } from '../generated/google/ads/googleads/v16/services/google_ads_service';
+} from '../generated/google/ads/googleads/v17/errors/errors';
+import { RequestErrorEnum_RequestError } from '../generated/google/ads/googleads/v17/errors/request_error';
+import { GoogleAdsRow } from '../generated/google/ads/googleads/v17/services/google_ads_service';
 import { Status } from '../generated/google/rpc/status';
 import { FAILURE_KEY, QueryBuilder, VERSION } from '../lib';
 import { decodePartialFailureError, getGoogleAdsError } from '../lib/utils';

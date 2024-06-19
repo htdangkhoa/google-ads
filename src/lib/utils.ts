@@ -1,7 +1,7 @@
 import { credentials, OAuth2Client, ServiceError } from '@grpc/grpc-js';
-import { GoogleAdsFailure } from '../generated/google/ads/googleads/v16/errors/errors';
+import { GoogleAdsFailure } from '../generated/google/ads/googleads/v17/errors/errors';
 import { FAILURE_KEY } from './constants';
-import { MutateGoogleAdsResponse } from '../generated/google/ads/googleads/v16/services/google_ads_service';
+import { MutateGoogleAdsResponse } from '../generated/google/ads/googleads/v17/services/google_ads_service';
 
 export const getCredentials = (authClient: OAuth2Client) => {
   const ssl = credentials.createSsl();
