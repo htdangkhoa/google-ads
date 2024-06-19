@@ -35,7 +35,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: build 22
-          path: build
+          path: dist
 
       - name: Setup Node
         uses: actions/setup-node@v4
