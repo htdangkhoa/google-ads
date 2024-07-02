@@ -2800,10 +2800,10 @@ ts-proto-descriptors@1.16.0:
     long "^5.2.3"
     protobufjs "^7.2.4"
 
-ts-proto@^1.170.0:
-  version "1.180.0"
-  resolved "https://registry.yarnpkg.com/ts-proto/-/ts-proto-1.180.0.tgz#87c64de11b56051e66391ddfbb6cd1762798cbe8"
-  integrity sha512-Gx+y1ohKNitnBpoA4ELRPl2nHBa4zUkedj3kHKuwYn0THpLiLVLuzYidlqJVZBDooI+l/EROGGqlCt95FItI9g==
+ts-proto@^1.181.0:
+  version "1.181.0"
+  resolved "https://registry.yarnpkg.com/ts-proto/-/ts-proto-1.181.0.tgz#9f87240c3cd9a6ac512fbbdab09ce51664f9c541"
+  integrity sha512-5+ZnxOgPsSn/lU93x8ApEFQPHE9G8kZubCSF1/EUjyeKImbGRp27iPXHilelQLOdClYHLUgr3hJwqtVqfsjNYQ==
   dependencies:
     case-anything "^2.1.13"
     protobufjs "^7.2.4"
