@@ -62,10 +62,10 @@ jobs:
 
       - name: Coveralls
         if: ${{ inputs.test }}
-        uses: pmienk/coveralls-github-action@master
+        uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          flag-name: ${{matrix.os}}-node-${{ matrix.node }}
+          flag-name: node-${{ inputs.node-version }}
           parallel: true
 
       - name: Build
