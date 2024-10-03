@@ -1,6 +1,6 @@
 import { google } from 'googleapis';
 
-import { GoogleAds } from '../src/lib';
+import { GoogleAds } from '../src';
 import { AdGroupStatusEnum_AdGroupStatus } from '../src/generated/google/ads/googleads/v17/enums/ad_group_status';
 import { AdGroupTypeEnum_AdGroupType } from '../src/generated/google/ads/googleads/v17/enums/ad_group_type';
 

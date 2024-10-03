@@ -1,5 +1,5 @@
 import { google } from 'googleapis';
-import { Customer, GoogleAds, QueryBuilder } from '../src/lib';
+import { Customer, GoogleAds, QueryBuilder } from '../src';
 
 const authClient = new google.auth.JWT({
   keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
