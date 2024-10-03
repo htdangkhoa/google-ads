@@ -14,8 +14,9 @@ import {
 } from '@grpc/grpc-js/build/src/client-interceptors.js';
 import log4js from 'log4js';
 import type { Logger } from 'log4js';
-import { Interceptor, LoggingOptions } from './types.js';
+
 import { HOST } from './constants.js';
+import { Interceptor, LoggingOptions } from './types.js';
 
 const cleanEmpty = function (obj: any, defaults = [undefined, null]): any {
   if (defaults.includes(obj)) return;

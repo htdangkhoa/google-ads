@@ -1,11 +1,15 @@
-import { GoogleAdsServiceClient } from '../lib';
+import { beforeAll, describe, expect, it } from 'vitest';
+
 import {
   MockService,
   MOCK_DEVELOPER_TOKEN,
   MOCK_OAUTH2_CLIENT,
 } from './test-utils';
+import { google as googleAdsApi } from '../src';
 
 let service: MockService;
+
+const { GoogleAdsServiceClient } = googleAdsApi.ads.googleads.v17.services;
 
 beforeAll(async () => {
   service = new MockService({
@@ -30,6 +34,14 @@ describe('Service', () => {
       expect(client).toBeInstanceOf(GoogleAdsServiceClient),
       expect(cached).toBeInstanceOf(GoogleAdsServiceClient),
     ]);
+  });
+
+  it('should be throw error if service not found', async () => {
+    try {
+      service.loadService('FooService');
+    } catch (e: any) {
+      expect(e.message).toBe('Service FooService not found.');
+    }
   });
 });
 

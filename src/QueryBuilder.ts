@@ -1,4 +1,5 @@
 import deepmerge from 'deepmerge';
+
 import { Condition, OrderBy, OrderDirection, QUERY } from './types.js';
 
 export class QueryBuilder {

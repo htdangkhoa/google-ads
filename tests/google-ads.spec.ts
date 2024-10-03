@@ -1,14 +1,14 @@
+import { beforeAll, describe, expect, it } from 'vitest';
 import { status, Metadata, ServiceError } from '@grpc/grpc-js';
-import { AuthenticationErrorEnum_AuthenticationError } from '../generated/google/ads/googleads/v17/errors/authentication_error';
+
 import {
-  ErrorCode,
-  GoogleAdsFailure,
-} from '../generated/google/ads/googleads/v17/errors/errors';
-import { RequestErrorEnum_RequestError } from '../generated/google/ads/googleads/v17/errors/request_error';
-import { GoogleAdsRow } from '../generated/google/ads/googleads/v17/services/google_ads_service';
-import { Status } from '../generated/google/rpc/status';
-import { FAILURE_KEY, QueryBuilder, VERSION } from '../lib';
-import { decodePartialFailureError, getGoogleAdsError } from '../lib/utils';
+  FAILURE_KEY,
+  QueryBuilder,
+  VERSION,
+  decodePartialFailureError,
+  getGoogleAdsError,
+  google as googleAdsApi,
+} from '../src';
 import {
   MockGoogleAds,
   MOCK_AD_GROUP_OPERATIONS,
@@ -21,6 +21,18 @@ import {
   MOCK_MANAGER_ID,
   MOCK_OAUTH2_CLIENT,
 } from './test-utils';
+
+const {
+  services: { GoogleAdsRow },
+  errors: {
+    GoogleAdsFailure,
+    ErrorCode,
+    AuthenticationErrorEnum_AuthenticationError,
+    RequestErrorEnum_RequestError,
+  },
+} = googleAdsApi.ads.googleads.v17;
+
+const { Status } = googleAdsApi.rpc;
 
 let service: MockGoogleAds;
 
@@ -141,7 +153,7 @@ describe('searchStream', () => {
       .setLinkedCustomerId(MOCK_LINKED_CUSTOMER_ID)
       .mockSearchStream({ query }, { results: MOCK_CAMPAIGNS });
 
-    const campaigns: GoogleAdsRow[] = [];
+    const campaigns: (typeof GoogleAdsRow)[] = [];
 
     while (true) {
       const { value, done } = await stream.next();

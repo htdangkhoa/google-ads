@@ -2,8 +2,6 @@ import { promisify } from 'util';
 import { ClientReadableStream, Metadata } from '@grpc/grpc-js';
 import deepmerge from 'deepmerge';
 
-import { Service } from './Service.js';
-import { CustomerOptions, ServiceOptions } from './types.js';
 import {
   GoogleAdsServiceClient,
   SearchGoogleAdsRequest,
@@ -13,6 +11,8 @@ import {
   MutateGoogleAdsRequest,
   MutateGoogleAdsResponse,
 } from './generated/google/ads/googleads/v17/services/google_ads_service.js';
+import { Service } from './Service.js';
+import { CustomerOptions, ServiceOptions } from './types.js';
 
 export class GoogleAds extends Service {
   private customerOptions: CustomerOptions;

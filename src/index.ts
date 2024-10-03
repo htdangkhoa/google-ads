@@ -1,3 +1,4 @@
+export * from './generated/index.js';
 export * from './constants.js';
 export * from './Customer.js';
 export * from './GoogleAds.js';
@@ -6,4 +7,3 @@ export * from './Service.js';
 export * from './ServiceProvider.js';
 export * from './types.js';
 export * from './utils.js';
-export * from './generated/index.js';
