@@ -1,18 +1,18 @@
 import { promisify } from 'util';
 import { ClientReadableStream, Metadata } from '@grpc/grpc-js';
-import { all as mergeAll } from 'deepmerge';
+import deepmerge from 'deepmerge';
 
-import { Service } from './Service';
-import { CustomerOptions, ServiceOptions } from './types';
-import { GoogleAdsServiceClient } from '../generated/google';
+import { Service } from './Service.js';
+import { CustomerOptions, ServiceOptions } from './types.js';
 import {
+  GoogleAdsServiceClient,
   SearchGoogleAdsRequest,
   SearchGoogleAdsResponse,
   SearchGoogleAdsStreamRequest,
   SearchGoogleAdsStreamResponse,
   MutateGoogleAdsRequest,
   MutateGoogleAdsResponse,
-} from '../generated/google/ads/googleads/v17/services/google_ads_service';
+} from './generated/google/ads/googleads/v17/services/google_ads_service.js';
 
 export class GoogleAds extends Service {
   private customerOptions: CustomerOptions;
@@ -62,7 +62,10 @@ export class GoogleAds extends Service {
     metadata?: Metadata,
   ): [R, Metadata] {
     const req = <R>(
-      mergeAll([{ customer_id: this.customerOptions.customer_id }, request])
+      deepmerge.all([
+        { customer_id: this.customerOptions.customer_id },
+        request,
+      ])
     );
 
     const meta = this.callMetadata;

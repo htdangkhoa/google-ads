@@ -1,12 +1,12 @@
 import { promisify } from 'util';
 import { Metadata } from '@grpc/grpc-js';
 
-import { Service } from './Service';
-import { CustomerServiceClient } from '../generated/google';
+import { Service } from './Service.js';
 import {
+  CustomerServiceClient,
   ListAccessibleCustomersRequest,
   ListAccessibleCustomersResponse,
-} from '../generated/google/ads/googleads/v17/services/customer_service';
+} from './generated/google/ads/googleads/v17/services/customer_service.js';
 
 export class Customer extends Service {
   protected get callMetadata(): Metadata {

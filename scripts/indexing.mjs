@@ -1,7 +1,7 @@
-const glob = require('glob').globSync;
-const fs = require('fs');
+import { globSync as glob } from 'glob';
+import fs from 'fs';
 
-const [path, version] = process.argv.slice(2);
+const [path, version, isESM] = process.argv.slice(2);
 
 const files = glob(`${path}/**/*.ts`);
 
@@ -11,7 +11,11 @@ const index = files
   .map((file) => {
     const filepath = file.replace(path, '').split('/').slice(0, -1).join('/');
 
-    const lines = [`import * as ${version} from '.${filepath}';`];
+    let importStatement = `import * as ${version} from '.${filepath}';`;
+    if (isESM === 'true') {
+      importStatement = `import * as ${version} from '.${filepath}/index.js';`;
+    }
+    const lines = [importStatement];
 
     const linesOfFile = fs.readFileSync(file, 'utf8').split('\n');
 

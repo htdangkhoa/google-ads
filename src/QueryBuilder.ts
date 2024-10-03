@@ -1,5 +1,5 @@
-import { all as mergeAll } from 'deepmerge';
-import { Condition, OrderBy, OrderDirection, QUERY } from './types';
+import deepmerge from 'deepmerge';
+import { Condition, OrderBy, OrderDirection, QUERY } from './types.js';
 
 export class QueryBuilder {
   private _attributes: string[] = [];
@@ -41,13 +41,13 @@ export class QueryBuilder {
 
   parameters(parameters: Record<string, string>) {
     this._parameters = <Record<string, string>>(
-      mergeAll([this._parameters, parameters])
+      deepmerge.all([this._parameters, parameters])
     );
     return this;
   }
 
   build() {
-    const query = [];
+    const query: (string | number)[] = [];
 
     if (this._attributes.length) {
       query.push(QUERY.SELECT, this._attributes.join(', '));

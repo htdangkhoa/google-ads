@@ -14,7 +14,13 @@ import {
   SearchGoogleAdsStreamRequest,
   SearchGoogleAdsStreamResponse,
 } from '../generated/google/ads/googleads/v17/services/google_ads_service';
-import { AllServices, Customer, GoogleAds, Service, ServiceName } from '../lib';
+import {
+  AllServices,
+  Customer,
+  GoogleAds,
+  Service,
+  ServiceName,
+} from '../src/lib';
 
 export const MOCK_ADDRESS = 'googleads.googleapis.com';
 
