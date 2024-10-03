@@ -1,6 +1,6 @@
 import { google } from 'googleapis';
 
-import { GoogleAds } from '../src/lib';
+import { GoogleAds } from '../src';
 import { Asset } from '../src/generated/google/ads/googleads/v17/resources/asset';
 import { MutateOperation } from '../src/generated/google/ads/googleads/v17/services/google_ads_service';
 

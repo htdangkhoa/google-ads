@@ -1,14 +1,17 @@
 import { Metadata } from '@grpc/grpc-js';
 
-import { ServiceProvider } from './ServiceProvider';
-import { AllServices, ServiceName, ServiceOptions } from './types';
-import { getCredentials } from './utils';
-import { LoggingInterceptor } from './LoggingInterceptor';
-import { HOST } from './constants';
+import { ServiceProvider } from './ServiceProvider.js';
+import { ServiceOptions } from './types.js';
+import { getCredentials } from './utils.js';
+import { LoggingInterceptor } from './LoggingInterceptor.js';
+import { HOST, VERSION } from './constants.js';
+import { google } from './generated/index.js';
+
+type ClassOfService = new (...args: any[]) => any;
 
 export class Service extends ServiceProvider {
-  // @ts-expect-error All fields don't need to be set here
-  protected cachedClients: Record<ServiceName, AllServices> = {};
+  // // @ts-expect-error All fields don't need to be set here
+  protected cachedClients: Record<string, ClassOfService> = {};
 
   protected options: ServiceOptions;
 
@@ -22,11 +25,15 @@ export class Service extends ServiceProvider {
     throw new Error('Not implemented');
   }
 
-  protected loadService<T = AllServices>(serviceName: ServiceName): T {
+  protected loadService<T = ClassOfService>(serviceName: string): T {
     if (this.cachedClients[serviceName])
       return this.cachedClients[serviceName] as T;
 
-    const { [serviceName]: ProtoService } = require('../generated/google');
+    const ProtoService = google.ads.googleads[VERSION].services[serviceName];
+
+    if (!ProtoService) {
+      throw new Error(`Service ${serviceName} not found.`);
+    }
 
     const {
       auth,

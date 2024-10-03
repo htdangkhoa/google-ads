@@ -5,17 +5,18 @@ import {
   Interceptor as GRPCInterceptor,
   StatusObject,
 } from '@grpc/grpc-js';
-import { Status } from '@grpc/grpc-js/build/src/constants';
+import { Status } from '@grpc/grpc-js/build/src/constants.js';
 import {
   FullRequester,
   ListenerBuilder,
   NextCall,
   RequesterBuilder,
-} from '@grpc/grpc-js/build/src/client-interceptors';
-import * as log4js from 'log4js';
+} from '@grpc/grpc-js/build/src/client-interceptors.js';
+import log4js from 'log4js';
 import type { Logger } from 'log4js';
-import { Interceptor, LoggingOptions } from './types';
-import { HOST } from './constants';
+
+import { HOST } from './constants.js';
+import { Interceptor, LoggingOptions } from './types.js';
 
 const cleanEmpty = function (obj: any, defaults = [undefined, null]): any {
   if (defaults.includes(obj)) return;

@@ -1,8 +1,9 @@
 import { credentials, Metadata, ServiceError } from '@grpc/grpc-js';
 import { google } from 'googleapis';
-import { AdGroupStatusEnum_AdGroupStatus } from '../generated/google/ads/googleads/v17/enums/ad_group_status';
-import { AdGroupTypeEnum_AdGroupType } from '../generated/google/ads/googleads/v17/enums/ad_group_type';
-import { ListAccessibleCustomersResponse } from '../generated/google/ads/googleads/v17/services/customer_service';
+
+import { AdGroupStatusEnum_AdGroupStatus } from '../src/generated/google/ads/googleads/v17/enums/ad_group_status';
+import { AdGroupTypeEnum_AdGroupType } from '../src/generated/google/ads/googleads/v17/enums/ad_group_type';
+import { ListAccessibleCustomersResponse } from '../src/generated/google/ads/googleads/v17/services/customer_service';
 import {
   GoogleAdsRow,
   MutateGoogleAdsRequest,
@@ -13,8 +14,10 @@ import {
   SearchGoogleAdsResponse,
   SearchGoogleAdsStreamRequest,
   SearchGoogleAdsStreamResponse,
-} from '../generated/google/ads/googleads/v17/services/google_ads_service';
-import { AllServices, Customer, GoogleAds, Service, ServiceName } from '../lib';
+} from '../src/generated/google/ads/googleads/v17/services/google_ads_service';
+import { Customer, GoogleAds, Service } from '../src';
+
+type AllServices = new (...args: any[]) => any;
 
 export const MOCK_ADDRESS = 'googleads.googleapis.com';
 
@@ -75,11 +78,11 @@ export const MOCK_AD_GROUP_RESULTS: MutateOperationResponse[] = [
 ];
 
 export class MockService extends Service {
-  loadService<T = AllServices>(serviceName: ServiceName): T {
+  loadService<T = AllServices>(serviceName: string): T {
     return super.loadService(serviceName);
   }
 
-  getCachedClient<T = AllServices>(serviceName: ServiceName): T {
+  getCachedClient<T = AllServices>(serviceName: string): T {
     return this.cachedClients[serviceName] as T;
   }
 
