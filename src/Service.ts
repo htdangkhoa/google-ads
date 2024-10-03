@@ -4,7 +4,7 @@ import { ServiceProvider } from './ServiceProvider.js';
 import { ServiceOptions } from './types.js';
 import { getCredentials } from './utils.js';
 import { LoggingInterceptor } from './LoggingInterceptor.js';
-import { HOST } from './constants.js';
+import { HOST, VERSION } from './constants.js';
 import { google } from './generated/index.js';
 
 type ClassOfService = new (...args: any[]) => any;
@@ -29,7 +29,7 @@ export class Service extends ServiceProvider {
     if (this.cachedClients[serviceName])
       return this.cachedClients[serviceName] as T;
 
-    const ProtoService = google.ads.googleads.v17.services[serviceName];
+    const ProtoService = google.ads.googleads[VERSION].services[serviceName];
 
     if (!ProtoService) {
       throw new Error(`Service ${serviceName} not found.`);
