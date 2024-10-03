@@ -1,13 +1,13 @@
 import { describe, it, expect } from 'vitest';
 
-import { google as googleAdsApi } from '../src';
+import { ads } from '../src';
 import { MOCK_ADDRESS, MOCK_CREDENTIALS } from './test-utils';
 
 const {
   services: { CustomerServiceClient, GoogleAdsServiceClient },
   enums: { AdvertisingChannelTypeEnum_AdvertisingChannelType },
   resources: { Campaign },
-} = googleAdsApi.ads.googleads.v17;
+} = ads.googleads.v17;
 
 describe('CustomerServiceClient', () => {
   it('should be exported', () => {

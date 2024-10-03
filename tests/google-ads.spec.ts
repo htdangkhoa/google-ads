@@ -7,7 +7,8 @@ import {
   VERSION,
   decodePartialFailureError,
   getGoogleAdsError,
-  google as googleAdsApi,
+  ads,
+  rpc,
 } from '../src';
 import {
   MockGoogleAds,
@@ -30,9 +31,9 @@ const {
     AuthenticationErrorEnum_AuthenticationError,
     RequestErrorEnum_RequestError,
   },
-} = googleAdsApi.ads.googleads.v17;
+} = ads.googleads.v17;
 
-const { Status } = googleAdsApi.rpc;
+const { Status } = rpc;
 
 let service: MockGoogleAds;
 

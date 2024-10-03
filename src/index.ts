@@ -1,4 +1,4 @@
-export * from './generated/index.js';
+export * from './generated/index.google.js';
 export * from './constants.js';
 export * from './Customer.js';
 export * from './GoogleAds.js';

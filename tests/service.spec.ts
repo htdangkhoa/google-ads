@@ -5,11 +5,11 @@ import {
   MOCK_DEVELOPER_TOKEN,
   MOCK_OAUTH2_CLIENT,
 } from './test-utils';
-import { google as googleAdsApi } from '../src';
+import { ads } from '../src';
 
 let service: MockService;
 
-const { GoogleAdsServiceClient } = googleAdsApi.ads.googleads.v17.services;
+const { GoogleAdsServiceClient } = ads.googleads.v17.services;
 
 beforeAll(async () => {
   service = new MockService({

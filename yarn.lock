@@ -416,12 +416,19 @@
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-1.0.6.tgz#628effeeae2064a1b4e79f78e81d87b7e5fc7b50"
   integrity sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==
 
-"@types/node@>=13.7.0", "@types/node@^20.11.30":
+"@types/node@>=13.7.0":
   version "20.14.6"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-20.14.6.tgz#f3c19ffc98c2220e18de259bb172dd4d892a6075"
   integrity sha512-JbA0XIJPL1IiNnU7PFxDXyfAwcwVVrOoqyzzyQTyMeVhBzkJVMSkC1LlVsRQ2lpqiY4n6Bb9oCS6lzDKVQxbZw==
   dependencies:
     undici-types "~5.26.4"
+
+"@types/node@^22.7.4":
+  version "22.7.4"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.7.4.tgz#e35d6f48dca3255ce44256ddc05dee1c23353fcc"
+  integrity sha512-y+NPi1rFzDs1NdQHHToqeiX2TIS79SWEAw9GYhkkx8bD0ChpfqC+n2j5OXOCpzfojBEBt6DnEnnG9MY0zk1XLg==
+  dependencies:
+    undici-types "~6.19.2"
 
 "@vitest/coverage-v8@^2.1.2":
   version "2.1.2"
@@ -899,18 +906,6 @@ get-intrinsic@^1.1.3, get-intrinsic@^1.2.4:
     has-symbols "^1.0.3"
     hasown "^2.0.0"
 
-glob@^10.3.7:
-  version "10.4.2"
-  resolved "https://registry.yarnpkg.com/glob/-/glob-10.4.2.tgz#bed6b95dade5c1f80b4434daced233aee76160e5"
-  integrity sha512-GwMlUF6PkPo3Gk21UxkCohOv0PLcIXVtKyLlpEI28R/cO/4eNOdmLk3CMW1wROV/WR/EsZOWAfBbBOqYvs88/w==
-  dependencies:
-    foreground-child "^3.1.0"
-    jackspeak "^3.1.2"
-    minimatch "^9.0.4"
-    minipass "^7.1.2"
-    package-json-from-dist "^1.0.0"
-    path-scurry "^1.11.1"
-
 glob@^10.4.1:
   version "10.4.5"
   resolved "https://registry.yarnpkg.com/glob/-/glob-10.4.5.tgz#f4d9f0b90ffdbab09c9d77f5f29b4262517b0956"
@@ -947,10 +942,10 @@ googleapis-common@^7.0.0:
     url-template "^2.0.8"
     uuid "^9.0.0"
 
-googleapis@^134.0.0:
-  version "134.0.0"
-  resolved "https://registry.yarnpkg.com/googleapis/-/googleapis-134.0.0.tgz#1cde101a00916c677384b76bcd0eea57cf3f80bd"
-  integrity sha512-o8LhD1754W6MHWtpwAPeP1WUHgNxuMxCnLMDFlMKAA5kCMTNqX9/eaTXnkkAIv6YRfoKMQ6D1vyR6/biXuhE9g==
+googleapis@^144.0.0:
+  version "144.0.0"
+  resolved "https://registry.yarnpkg.com/googleapis/-/googleapis-144.0.0.tgz#969aff29be76e308ea75ee52f10991af4c8ddc63"
+  integrity sha512-ELcWOXtJxjPX4vsKMh+7V+jZvgPwYMlEhQFiu2sa9Qmt5veX8nwXPksOWGGN6Zk4xCiLygUyaz7xGtcMO+Onxw==
   dependencies:
     google-auth-library "^9.0.0"
     googleapis-common "^7.0.0"
@@ -1314,13 +1309,6 @@ rfdc@^1.3.0:
   resolved "https://registry.yarnpkg.com/rfdc/-/rfdc-1.4.1.tgz#778f76c4fb731d93414e8f925fbecf64cce7f6ca"
   integrity sha512-q1b3N5QkRUWUl7iyylaaj3kOpIT0N2i9MqIEQXP73GVsN9cw3fdx8X63cEmWhJGi2PPCF23Ijp7ktmd39rawIA==
 
-rimraf@^5.0.5:
-  version "5.0.7"
-  resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-5.0.7.tgz#27bddf202e7d89cb2e0381656380d1734a854a74"
-  integrity sha512-nV6YcJo5wbLW77m+8KjH8aB/7/rxQy9SZ0HY5shnwULfS+9nmTtVXAJET5NdZmCzA4fPI/Hm1wo/Po/4mopOdg==
-  dependencies:
-    glob "^10.3.7"
-
 rollup@^4.20.0:
   version "4.24.0"
   resolved "https://registry.yarnpkg.com/rollup/-/rollup-4.24.0.tgz#c14a3576f20622ea6a5c9cad7caca5e6e9555d05"
@@ -1540,25 +1528,30 @@ ts-proto-descriptors@2.0.0:
   dependencies:
     "@bufbuild/protobuf" "^2.0.0"
 
-ts-proto@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/ts-proto/-/ts-proto-2.2.0.tgz#e9e5f77b758baec8f2ec29eed4904f485b5eca8e"
-  integrity sha512-xzmnyrarUjPnY+Py4RyTh3lYmL9w5t/oTtRTo2rKF8laAAahpGZ/ELxkXFEZns5JVbgkYke3C17HN5iNvZOs4g==
+ts-proto@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/ts-proto/-/ts-proto-2.2.1.tgz#a58f5ad6fff5450006903a4e4f36a1b32fb8c357"
+  integrity sha512-EiPj34febZLbLdEyo//J20ix44kFFRZJYGuEx43cOBZ0pLSGiBKLwy2ORfkeJTlhHFqZKPoaWdiRyI4pYqdR4Q==
   dependencies:
     "@bufbuild/protobuf" "^2.0.0"
     case-anything "^2.1.13"
     ts-poet "^6.7.0"
     ts-proto-descriptors "2.0.0"
 
-typescript@5.4.3:
-  version "5.4.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.4.3.tgz#5c6fedd4c87bee01cd7a528a30145521f8e0feff"
-  integrity sha512-KrPd3PKaCLr78MalgiwJnA25Nm8HAmdwN3mYUYZgG/wizIo9EainNVQI9/yDavtVFRN2h3k8uf3GLHuhDMgEHg==
+typescript@5.6.2:
+  version "5.6.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.6.2.tgz#d1de67b6bef77c41823f822df8f0b3bcff60a5a0"
+  integrity sha512-NW8ByodCSNCwZeghjN3o+JX5OFH0Ojg6sadjEKY4huZ52TqbJTJnDo5+Tw98lSy63NZvi4n+ez5m2u5d4PkZyw==
 
 undici-types@~5.26.4:
   version "5.26.5"
   resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-5.26.5.tgz#bcd539893d00b56e964fd2657a4866b221a65617"
   integrity sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==
+
+undici-types@~6.19.2:
+  version "6.19.8"
+  resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-6.19.8.tgz#35111c9d1437ab83a7cdc0abae2f26d88eda0a02"
+  integrity sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==
 
 universalify@^0.1.0:
   version "0.1.2"
