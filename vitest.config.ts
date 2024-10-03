@@ -10,6 +10,7 @@ export default defineConfig({
     },
     coverage: {
       provider: 'v8',
+      reporter: ['html', 'lcov'],
       reportsDirectory: 'coverage',
       include: ['src'],
       exclude: ['src/generated', 'src/LoggingInterceptor.ts'],
