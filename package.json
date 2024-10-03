@@ -14,6 +14,20 @@
   "contributors": [
     "huynhtran.dangkhoa@gmail.com"
   ],
+  "keywords": [
+    "google",
+    "ads",
+    "api",
+    "node",
+    "google ads api",
+    "google ads",
+    "google ads nodejs",
+    "google ads js",
+    "ads node",
+    "grpc",
+    "proto",
+    "sdk"
+  ],
   "license": "MIT",
   "type": "module",
   "exports": {
