@@ -1,21 +1,23 @@
 import { credentials, Metadata, ServiceError } from '@grpc/grpc-js';
 import { google } from 'googleapis';
 
-import { AdGroupStatusEnum_AdGroupStatus } from '../src/generated/google/ads/googleads/v17/enums/ad_group_status';
-import { AdGroupTypeEnum_AdGroupType } from '../src/generated/google/ads/googleads/v17/enums/ad_group_type';
-import { ListAccessibleCustomersResponse } from '../src/generated/google/ads/googleads/v17/services/customer_service';
-import {
-  GoogleAdsRow,
-  MutateGoogleAdsRequest,
-  MutateGoogleAdsResponse,
-  MutateOperation,
-  MutateOperationResponse,
-  SearchGoogleAdsRequest,
-  SearchGoogleAdsResponse,
-  SearchGoogleAdsStreamRequest,
-  SearchGoogleAdsStreamResponse,
-} from '../src/generated/google/ads/googleads/v17/services/google_ads_service';
-import { Customer, GoogleAds, Service } from '../src';
+import { Customer, GoogleAds, MessageType, Service, ads } from '../src';
+
+const {
+  services: {
+    ListAccessibleCustomersResponse,
+    GoogleAdsRow,
+    MutateGoogleAdsRequest,
+    MutateGoogleAdsResponse,
+    MutateOperation,
+    MutateOperationResponse,
+    SearchGoogleAdsRequest,
+    SearchGoogleAdsResponse,
+    SearchGoogleAdsStreamRequest,
+    SearchGoogleAdsStreamResponse,
+  },
+  enums: { AdGroupStatusEnum_AdGroupStatus, AdGroupTypeEnum_AdGroupType },
+} = ads.googleads.v17;
 
 type AllServices = new (...args: any[]) => any;
 
@@ -39,7 +41,7 @@ export const MOCK_LINKED_CUSTOMER_ID = 'MOCK LINKED CUSTOMER ID';
 
 export const MOCK_CUSTOMERS = ['customers/1234567890'];
 
-export const MOCK_CUSTOMER_CLIENTS: GoogleAdsRow[] = [
+export const MOCK_CUSTOMER_CLIENTS: MessageType<typeof GoogleAdsRow>[] = [
   {
     customer_client: {
       resource_name: `customers/${MOCK_MANAGER_ID}/customerClients/${MOCK_CUSTOMER_ID}`,
@@ -50,13 +52,13 @@ export const MOCK_CUSTOMER_CLIENTS: GoogleAdsRow[] = [
   },
 ];
 
-export const MOCK_CAMPAIGNS: GoogleAdsRow[] = [
+export const MOCK_CAMPAIGNS: MessageType<typeof GoogleAdsRow>[] = [
   { campaign: { resource_name: 'customers/1/campaigns/11' } },
   { campaign: { resource_name: 'customers/2/campaigns/22' } },
   { campaign: { resource_name: 'customers/3/campaigns/33' } },
 ];
 
-export const MOCK_AD_GROUP_OPERATIONS: MutateOperation[] = [
+export const MOCK_AD_GROUP_OPERATIONS: MessageType<typeof MutateOperation>[] = [
   {
     ad_group_operation: {
       create: {
@@ -69,7 +71,9 @@ export const MOCK_AD_GROUP_OPERATIONS: MutateOperation[] = [
   },
 ];
 
-export const MOCK_AD_GROUP_RESULTS: MutateOperationResponse[] = [
+export const MOCK_AD_GROUP_RESULTS: MessageType<
+  typeof MutateOperationResponse
+>[] = [
   {
     ad_group_result: {
       resource_name: 'customers/1/adGroups/11',
@@ -92,7 +96,9 @@ export class MockService extends Service {
 }
 
 export class MockCustomer extends Customer {
-  async mockListAccessibleCustomers(): Promise<ListAccessibleCustomersResponse> {
+  async mockListAccessibleCustomers(): Promise<
+    MessageType<typeof ListAccessibleCustomersResponse>
+  > {
     try {
       return await super.listAccessibleCustomers();
     } catch (err: any) {
@@ -106,17 +112,17 @@ export class MockCustomer extends Customer {
 
 export class MockGoogleAds extends GoogleAds {
   async mockSearch(
-    request: SearchGoogleAdsRequest,
-    mockResponse: SearchGoogleAdsResponse | ServiceError,
+    request: MessageType<typeof SearchGoogleAdsRequest>,
+    mockResponse: MessageType<typeof SearchGoogleAdsResponse> | ServiceError,
     metadata?: Metadata | undefined,
-  ): Promise<SearchGoogleAdsResponse> {
+  ): Promise<MessageType<typeof SearchGoogleAdsResponse> | ServiceError> {
     try {
       return await super.search(request, metadata);
     } catch (err: any) {
       if (err.message === 'Missing customer ID') throw err;
     } finally {
       if ('results' in mockResponse) {
-        return mockResponse as SearchGoogleAdsResponse;
+        return mockResponse as MessageType<typeof SearchGoogleAdsResponse>;
       } else {
         throw mockResponse as ServiceError;
       }
@@ -124,10 +130,14 @@ export class MockGoogleAds extends GoogleAds {
   }
 
   async *mockSearchStream(
-    request: SearchGoogleAdsStreamRequest,
-    mockResponse: SearchGoogleAdsStreamResponse,
+    request: MessageType<typeof SearchGoogleAdsStreamRequest>,
+    mockResponse: MessageType<typeof SearchGoogleAdsStreamResponse>,
     metadata?: Metadata | undefined,
-  ): AsyncGenerator<SearchGoogleAdsStreamResponse, any, unknown> {
+  ): AsyncGenerator<
+    MessageType<typeof SearchGoogleAdsStreamResponse>,
+    any,
+    unknown
+  > {
     const stream = super.searchStream(request, metadata);
 
     try {
@@ -143,10 +153,10 @@ export class MockGoogleAds extends GoogleAds {
   }
 
   async mockMutate(
-    request: MutateGoogleAdsRequest,
-    mockResponse: MutateGoogleAdsResponse,
+    request: MessageType<typeof MutateGoogleAdsRequest>,
+    mockResponse: MessageType<typeof MutateGoogleAdsResponse>,
     metadata?: Metadata | undefined,
-  ): Promise<MutateGoogleAdsResponse> {
+  ): Promise<MessageType<typeof MutateGoogleAdsResponse>> {
     try {
       return await super.mutate(request, metadata);
     } catch (err: any) {

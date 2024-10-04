@@ -64,6 +64,7 @@
     "@types/node": "^22.7.4",
     "@vitest/coverage-v8": "^2.1.2",
     "coveralls-next": "^4.2.0",
+    "fast-glob": "^3.3.2",
     "googleapis": "^144.0.0",
     "ts-node": "^10.9.2",
     "ts-proto": "^2.2.1",
