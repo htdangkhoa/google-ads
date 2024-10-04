@@ -1,4 +1,4 @@
-import { Metadata } from '@grpc/grpc-js';
+import { Metadata, CallProperties } from '@grpc/grpc-js';
 
 import { ServiceProvider } from './ServiceProvider.js';
 import { ServiceOptions } from './types.js';
@@ -10,7 +10,6 @@ import { google } from './generated/index.js';
 type ClassOfService = new (...args: any[]) => any;
 
 export class Service extends ServiceProvider {
-  // // @ts-expect-error All fields don't need to be set here
   protected cachedClients: Record<string, ClassOfService> = {};
 
   protected options: ServiceOptions;
@@ -40,16 +39,22 @@ export class Service extends ServiceProvider {
       developer_token,
       logging,
       interceptors = [],
+      callInvocationTransformer,
       ...opts
     } = this.options;
     const credentials = getCredentials(auth);
 
+    const logger = new LoggingInterceptor(logging || false);
+
     const client = new ProtoService(HOST, credentials, {
       ...opts,
-      interceptors: [
-        new LoggingInterceptor(logging || false).interceptCall,
-        ...interceptors,
-      ],
+      interceptors: [logger.interceptCall.bind(logger), ...interceptors],
+      callInvocationTransformer: (properties: CallProperties<any, any>) => {
+        return logger.callInvocationTransformer(
+          properties,
+          callInvocationTransformer,
+        );
+      },
     });
 
     this.cachedClients[serviceName] = client;

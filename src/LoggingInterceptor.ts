@@ -1,22 +1,23 @@
 import {
-  InterceptingCall,
+  CallProperties,
   InterceptorOptions,
-  Metadata,
-  Interceptor as GRPCInterceptor,
-  StatusObject,
-} from '@grpc/grpc-js';
-import { Status } from '@grpc/grpc-js/build/src/constants.js';
-import {
-  FullRequester,
-  ListenerBuilder,
   NextCall,
+  InterceptingCall,
+  Requester,
   RequesterBuilder,
-} from '@grpc/grpc-js/build/src/client-interceptors.js';
+  Metadata,
+  ListenerBuilder,
+  ServiceError,
+  StatusObject,
+  status,
+} from '@grpc/grpc-js';
 import log4js from 'log4js';
 import type { Logger } from 'log4js';
 
 import { HOST } from './constants.js';
-import { Interceptor, LoggingOptions } from './types.js';
+import { LoggingOptions } from './types.js';
+import { getGoogleAdsError } from './utils.js';
+import { GoogleAdsFailure } from './generated/google/ads/googleads/v17/errors/errors.js';
 
 const cleanEmpty = function (obj: any, defaults = [undefined, null]): any {
   if (defaults.includes(obj)) return;
@@ -39,10 +40,32 @@ const cleanEmpty = function (obj: any, defaults = [undefined, null]): any {
     : obj;
 };
 
-export class LoggingInterceptor implements Interceptor {
+interface Event {
+  isSuccess: boolean;
+  methodName: string;
+  responseStatus: StatusObject;
+  customerId?: string;
+  requestId?: string;
+  requestHeaders?: Metadata;
+  request?: any;
+  responseHeaders?: Metadata;
+  response?: any;
+}
+
+export class LoggingInterceptor {
   private requestLogging: boolean | LoggingOptions;
   private summaryLogger: Logger;
   private detailLogger: Logger;
+
+  private messages: string[] = [];
+
+  private requester: Requester;
+
+  private interceptorOptions?: InterceptorOptions;
+  private request?: any;
+  private requestHeaders?: Metadata;
+  private responseHeaders?: Metadata;
+  private responseStatus?: StatusObject;
 
   constructor(requestLogging: boolean | LoggingOptions) {
     this.requestLogging = requestLogging;
@@ -57,130 +80,190 @@ export class LoggingInterceptor implements Interceptor {
     });
     this.summaryLogger = log4js.getLogger('Google::Ads::GoogleAds::Summary');
     this.detailLogger = log4js.getLogger('Google::Ads::GoogleAds::Detail');
+
+    this.requester = new RequesterBuilder()
+      .withSendMessage((message, next) => {
+        this.request = message;
+        return next(message);
+      })
+      .withStart((headers, _listener, next) => {
+        this.requestHeaders = headers;
+
+        const listener = new ListenerBuilder()
+          .withOnReceiveMetadata((metadata, next) => {
+            this.responseHeaders = metadata;
+            next(metadata);
+          })
+          .withOnReceiveStatus((status, next) => {
+            this.responseStatus = status;
+            next(status);
+          })
+          .build();
+
+        return next(headers, listener);
+      })
+      .build();
   }
 
-  private logSummary(
-    responseStatus: StatusObject,
-    request: any,
+  callInvocationTransformer(
+    properties: CallProperties<any, any>,
+    originalCallInvocationTransformer?: (
+      properties: CallProperties<any, any>,
+    ) => CallProperties<any, any>,
+  ): CallProperties<any, any> {
+    let props = properties;
+
+    if (typeof originalCallInvocationTransformer === 'function') {
+      props = originalCallInvocationTransformer?.(props);
+    }
+
+    const originalCallback = props.callback;
+
+    // clear messages from previous call
+    this.messages.length = 0;
+
+    props.callback = (error: ServiceError | null, value?: any) => {
+      this.callback(error, value);
+
+      if (typeof originalCallback === 'function') {
+        originalCallback(error, value);
+      }
+    };
+
+    return props;
+  }
+
+  interceptCall(
     options: InterceptorOptions,
-    responseHeaders: Metadata,
-  ) {
+    nextCall: NextCall,
+  ): InterceptingCall {
+    this.interceptorOptions = options;
+    return new InterceptingCall(nextCall(options), this.requester);
+  }
+
+  private callback(err: ServiceError | null, value?: any) {
+    const isSuccess = !err && this.responseStatus?.code === status.OK.valueOf();
+
+    const methodName = this.interceptorOptions?.method_definition.path ?? '';
+    const requestHeaders = this.requestHeaders ?? new Metadata();
+    const request = this.request ?? {};
+    const responseHeaders = this.responseHeaders ?? new Metadata();
+
+    const responseStatus: StatusObject = {
+      code:
+        (!isSuccess ? err!.code : this.responseStatus?.code) ?? status.UNKNOWN,
+      details: (!isSuccess ? err!.details : this.responseStatus?.details) ?? '',
+      metadata:
+        (!isSuccess ? err!.metadata : this.responseStatus?.metadata) ??
+        new Metadata(),
+    };
+
+    this.logSummary({
+      isSuccess,
+      methodName,
+      responseStatus,
+      customerId: this.request?.['customer_id'],
+      requestId: requestHeaders?.get('request-id')?.toString(),
+    });
+
+    this.logDetail({
+      isSuccess,
+      methodName,
+      responseStatus,
+      requestHeaders,
+      request,
+      responseHeaders,
+      response: err || value,
+    });
+  }
+
+  private logSummary(event: Event) {
     if (
       this.requestLogging === true ||
       (<LoggingOptions>this.requestLogging).summary === true
     ) {
-      const isSuccess = responseStatus.code == Status.OK.valueOf();
+      const { isSuccess, methodName, responseStatus, customerId, requestId } =
+        event;
 
       const messages = [
         `${isSuccess ? 'SUCCESS' : 'FAILURE'} REQUEST SUMMARY.`,
-        `Host=${HOST}`,
-        `Method=${options.method_definition.path}`,
-        `ClientCustomerId=${request.customer_id}`,
-        `RequestId=${responseHeaders.get('request-id')}`,
+        `Host=${HOST},`,
+        `Method=${methodName},`,
+        `ClientCustomerId=${customerId},`,
+        `RequestId=${requestId},`,
         `ResponseCode=${responseStatus.code}`,
       ];
 
       if (isSuccess) {
-        this.summaryLogger.info(messages.join(' '));
+        const msg = messages.join(' ').concat('.');
+        this.summaryLogger.info(msg);
       } else {
-        messages.push(`Fault=${responseStatus.details}`);
-        this.summaryLogger.warn(messages.join(' '));
+        let msg = messages
+          .join(' ')
+          .concat(`, Fault=${responseStatus.details}`);
+
+        if (!msg.endsWith('.')) msg += '.';
+
+        this.summaryLogger.warn(msg);
       }
     }
   }
 
-  private logDetail(
-    responseStatus: StatusObject,
-    request: any,
-    requestHeaders: Metadata,
-    options: InterceptorOptions,
-    response: any,
-    responseHeaders: Metadata,
-  ) {
+  private logDetail(event: Event) {
     if (
       this.requestLogging === true ||
       (<LoggingOptions>this.requestLogging).detail === true
     ) {
-      const isSuccess = responseStatus.code == Status.OK.valueOf();
+      const {
+        isSuccess,
+        methodName,
+        responseStatus,
+        requestHeaders,
+        request,
+        responseHeaders,
+        response,
+      } = event;
 
       const messages = [
         `${isSuccess ? 'SUCCESS' : 'FAILURE'} REQUEST DETAIL.`,
         'Request',
         '-------',
-        `MethodName: ${options.method_definition.path}`,
+        `MethodName: ${methodName}`,
         `Host: ${HOST}`,
-        `Headers: ${JSON.stringify(requestHeaders.getMap())}`,
+        `Headers: ${JSON.stringify(requestHeaders?.getMap() ?? {})}`,
         `Body: ${JSON.stringify(request)}`,
         `\nResponse`,
         '--------',
-        `Headers: ${JSON.stringify(responseHeaders.getMap())}`,
-        `Body: ${JSON.stringify(cleanEmpty(response))}`,
-        `ResponseCode: ${responseStatus.code}`,
+        `Headers: ${JSON.stringify(responseHeaders?.getMap() ?? {})}`,
       ];
 
-      if (isSuccess) {
-        this.detailLogger.debug(messages.join('\n'));
-      } else {
-        messages.push(`Fault: ${responseStatus.details}`);
+      if (!isSuccess) {
+        const serviceError = <ServiceError>response;
+
+        const { errors } = getGoogleAdsError(serviceError) as GoogleAdsFailure;
+        const [googleAdsError] = errors ?? [];
+
+        const [errorType, errorCode] =
+          Object.entries<any>(googleAdsError.error_code ?? {}).find(
+            ([key, value]) => ![undefined, null].includes(value),
+          ) ?? [];
+
+        const errorMessage = googleAdsError.message;
+
+        messages.push(
+          `Body: ${errorMessage}`,
+          `ResponseCode: ${responseStatus.code}`,
+          `ErrorCode: ${errorCode} (${errorType})`,
+          `FailureMessage: ${responseStatus!.details}`,
+        );
         this.detailLogger.info(messages.join('\n'));
+      } else {
+        messages.push(
+          `Body: ${JSON.stringify(cleanEmpty(response))}`,
+          `ResponseCode: ${responseStatus.code}`,
+        );
+        this.detailLogger.debug(messages.join('\n'));
       }
     }
   }
-
-  interceptCall: GRPCInterceptor = (
-    options: InterceptorOptions,
-    nextCall: NextCall,
-  ) => {
-    let request: any;
-    let requestHeaders: Metadata;
-    let response: any;
-    let responseHeaders: Metadata;
-
-    const requester: Partial<FullRequester> = new RequesterBuilder()
-      .withStart((headers, responseListener, next) => {
-        requestHeaders = headers;
-
-        const listener = new ListenerBuilder()
-          .withOnReceiveMessage((message, next) => {
-            response = message;
-            next(message);
-          })
-          .withOnReceiveMetadata((metadata, next) => {
-            responseHeaders = metadata;
-            next(metadata);
-          })
-          .withOnReceiveStatus((status, next) => {
-            try {
-              this.logSummary(status, request, options, responseHeaders);
-              this.logDetail(
-                status,
-                request,
-                requestHeaders,
-                options,
-                response,
-                responseHeaders,
-              );
-            } catch (error) {
-            } finally {
-              next(status);
-            }
-          })
-          .build();
-
-        next(headers, listener);
-      })
-      .withSendMessage((message, next) => {
-        request = message;
-        next(message);
-      })
-      .withHalfClose((next) => {
-        next();
-      })
-      .withCancel((next) => {
-        next();
-      })
-      .build();
-
-    return new InterceptingCall(nextCall(options), requester);
-  };
 }
