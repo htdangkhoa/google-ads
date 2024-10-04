@@ -1,8 +1,11 @@
 import { google } from 'googleapis';
 
-import { GoogleAds } from '../src';
-import { Asset } from '../src/generated/google/ads/googleads/v17/resources/asset';
-import { MutateOperation } from '../src/generated/google/ads/googleads/v17/services/google_ads_service';
+import { GoogleAds, ads, MessageType } from '../src';
+
+const {
+  resources: { Asset },
+  services: { MutateOperation },
+} = ads.googleads.v17;
 
 const authClient = new google.auth.JWT({
   keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
@@ -13,7 +16,7 @@ const authClient = new google.auth.JWT({
 export async function uploadAsset(
   customer_id: string,
   login_customer_id: string,
-  assets: Asset[],
+  assets: MessageType<typeof Asset>[],
 ) {
   const service = new GoogleAds(
     {
@@ -26,11 +29,13 @@ export async function uploadAsset(
     },
   );
 
-  const mutate_operations: MutateOperation[] = assets.map((asset) => ({
-    asset_operation: {
-      create: asset,
-    },
-  }));
+  const mutate_operations: MessageType<typeof MutateOperation>[] = assets.map(
+    (asset) => ({
+      asset_operation: {
+        create: asset,
+      },
+    }),
+  );
 
   try {
     const { mutate_operation_responses, partial_failure_error } =

@@ -51,3 +51,7 @@ protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto \
   --ts_proto_out=$outdir \
   --ts_proto_opt=$ts_proto_opts \
   $path/google/ads/googleads/$version/**/*.proto
+
+echo 'Formating MessageFns from generated files...'
+
+node scripts/format-message-fns.mjs
