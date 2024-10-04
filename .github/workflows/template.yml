@@ -74,7 +74,7 @@ jobs:
 
       - name: Create build artifact
         if: ${{ inputs.build }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build ${{ inputs.node-version }}
-          path: build
+          path: dist
