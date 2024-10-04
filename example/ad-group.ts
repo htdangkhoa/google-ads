@@ -1,8 +1,10 @@
 import { google } from 'googleapis';
 
-import { GoogleAds } from '../src/lib';
-import { AdGroupStatusEnum_AdGroupStatus } from '../src/generated/google/ads/googleads/v17/enums/ad_group_status';
-import { AdGroupTypeEnum_AdGroupType } from '../src/generated/google/ads/googleads/v17/enums/ad_group_type';
+import { GoogleAds, ads } from '../src';
+
+const {
+  enums: { AdGroupStatusEnum_AdGroupStatus, AdGroupTypeEnum_AdGroupType },
+} = ads.googleads.v17;
 
 const authClient = new google.auth.JWT({
   keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,

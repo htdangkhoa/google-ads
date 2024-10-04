@@ -53,7 +53,7 @@ jobs:
 
       - name: Test
         if: ${{ inputs.test }}
-        run: yarn test
+        run: yarn test --coverage
 
       - name: Write COVERALLS_TOKEN to .coveralls.yml
         if: ${{ inputs.test }}
@@ -62,10 +62,10 @@ jobs:
 
       - name: Coveralls
         if: ${{ inputs.test }}
-        uses: pmienk/coveralls-github-action@master
+        uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          flag-name: ${{matrix.os}}-node-${{ matrix.node }}
+          flag-name: node-${{ inputs.node-version }}
           parallel: true
 
       - name: Build

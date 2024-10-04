@@ -1,5 +1,6 @@
-import { Functions, Operators, OrderDirection } from '../lib';
-import { QueryBuilder } from '../lib/QueryBuilder';
+import { describe, expect, it } from 'vitest';
+
+import { Functions, Operators, OrderDirection, QueryBuilder } from '../src';
 
 describe('QueryBuilder', () => {
   it('correctly builds a query', () => {

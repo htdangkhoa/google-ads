@@ -16,7 +16,7 @@ jobs:
       deployments: write
     steps:
       - name: Delete previous deployments
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             const { data: deployments } = await github.rest.repos.listDeployments({

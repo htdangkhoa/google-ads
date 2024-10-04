@@ -1,8 +1,13 @@
-import { CustomerServiceClient } from '../generated/google/ads/googleads/v17/services/customer_service';
-import { GoogleAdsServiceClient } from '../generated/google/ads/googleads/v17/services/google_ads_service';
-import { Campaign } from '../generated/google/ads/googleads/v17/resources/campaign';
-import { AdvertisingChannelTypeEnum_AdvertisingChannelType } from '../generated/google/ads/googleads/v17/enums/advertising_channel_type';
+import { describe, it, expect } from 'vitest';
+
+import { ads } from '../src';
 import { MOCK_ADDRESS, MOCK_CREDENTIALS } from './test-utils';
+
+const {
+  services: { CustomerServiceClient, GoogleAdsServiceClient },
+  enums: { AdvertisingChannelTypeEnum_AdvertisingChannelType },
+  resources: { Campaign },
+} = ads.googleads.v17;
 
 describe('CustomerServiceClient', () => {
   it('should be exported', () => {
