@@ -1,23 +1,20 @@
 import { describe, it, expect } from 'vitest';
 
-import { ads } from '../src';
+import { services, enums, resources } from '../src';
 import { MOCK_ADDRESS, MOCK_CREDENTIALS } from './test-utils';
-
-const {
-  services: { CustomerServiceClient, GoogleAdsServiceClient },
-  enums: { AdvertisingChannelTypeEnum_AdvertisingChannelType },
-  resources: { Campaign },
-} = ads.googleads.v17;
 
 describe('CustomerServiceClient', () => {
   it('should be exported', () => {
-    expect(typeof CustomerServiceClient).toBe('function');
+    expect(typeof services.CustomerServiceClient).toBe('function');
   });
 
   it('should be able to create a client', () => {
-    const client = new CustomerServiceClient(MOCK_ADDRESS, MOCK_CREDENTIALS);
+    const client = new services.CustomerServiceClient(
+      MOCK_ADDRESS,
+      MOCK_CREDENTIALS,
+    );
 
-    expect(client).toBeInstanceOf(CustomerServiceClient);
+    expect(client).toBeInstanceOf(services.CustomerServiceClient);
 
     expect(client).toEqual(
       expect.objectContaining({
@@ -31,13 +28,16 @@ describe('CustomerServiceClient', () => {
 
 describe('GoogleAdsServiceClient', () => {
   it('should be exported', () => {
-    expect(typeof GoogleAdsServiceClient).toBe('function');
+    expect(typeof services.GoogleAdsServiceClient).toBe('function');
   });
 
   it('should be able to create a client', () => {
-    const client = new GoogleAdsServiceClient(MOCK_ADDRESS, MOCK_CREDENTIALS);
+    const client = new services.GoogleAdsServiceClient(
+      MOCK_ADDRESS,
+      MOCK_CREDENTIALS,
+    );
 
-    expect(client).toBeInstanceOf(GoogleAdsServiceClient);
+    expect(client).toBeInstanceOf(services.GoogleAdsServiceClient);
 
     expect(client).toEqual(
       expect.objectContaining({
@@ -52,14 +52,14 @@ describe('GoogleAdsServiceClient', () => {
 });
 
 describe('Campaign', () => {
-  const campaign = Campaign.fromPartial({
+  const campaign = resources.Campaign.fromPartial({
     name: 'Planet Express',
     advertising_channel_type:
-      AdvertisingChannelTypeEnum_AdvertisingChannelType.SEARCH,
+      enums.AdvertisingChannelTypeEnum_AdvertisingChannelType.SEARCH,
   });
 
   it('should be exported', () => {
-    expect(typeof Campaign).toBe('object');
+    expect(typeof resources.Campaign).toBe('object');
   });
 
   it('should have a name', () => {
@@ -68,7 +68,7 @@ describe('Campaign', () => {
 
   it('should have an advertising channel type', () => {
     expect(campaign.advertising_channel_type).toBe(
-      AdvertisingChannelTypeEnum_AdvertisingChannelType.SEARCH,
+      enums.AdvertisingChannelTypeEnum_AdvertisingChannelType.SEARCH,
     );
   });
 });

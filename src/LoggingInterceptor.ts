@@ -53,7 +53,6 @@ interface Event {
 }
 
 export class LoggingInterceptor {
-  private requestLogging: boolean | LoggingOptions;
   private summaryLogger: Logger;
   private detailLogger: Logger;
 
@@ -67,7 +66,7 @@ export class LoggingInterceptor {
   private responseHeaders?: Metadata;
   private responseStatus?: StatusObject;
 
-  constructor(requestLogging: boolean | LoggingOptions) {
+  constructor(private requestLogging: boolean | LoggingOptions) {
     this.requestLogging = requestLogging;
 
     log4js.configure({
