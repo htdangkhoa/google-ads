@@ -296,29 +296,6 @@ const service = new GoogleAds(
 
 See more at [Node.js gRPC Library](https://grpc.github.io/grpc/node/module-src_client_interceptors.html) and some examples [here](https://github.com/grpc/proposal/blob/master/L5-node-client-interceptors.md).
 
-## Bonus
-
-### Type helper
-
-If you are using the generated types from the protos, you may run into an issue where the types are referring to values instead of types or missing the following properties from types. You can use the following helper to fix this issue.
-
-```ts
-import { ads, MessageType, MessageFnsKeys } from '@htdangkhoa/google-ads';
-
-const {
-  services: { GoogleAdsRow },
-} = ads.googleads.v17;
-
-const row: MessageType<typeof GoogleAdsRow> = {
-  // ... properties
-};
-
-// or 
-const row: Omit<typeof GoogleAdsRow, MessageFnsKeys> = {
-  // ... properties
-};
-```
-
 ## Development
 
 ### Prerequisites

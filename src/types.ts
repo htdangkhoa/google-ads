@@ -89,13 +89,3 @@ export interface OrderBy {
 export interface Interceptor {
   interceptCall: GRPCInterceptor;
 }
-
-export type MessageFnsKeys =
-  | 'create'
-  | 'encode'
-  | 'decode'
-  | 'fromJSON'
-  | 'toJSON'
-  | 'fromPartial';
-
-export type MessageType<T> = Omit<T, MessageFnsKeys>;

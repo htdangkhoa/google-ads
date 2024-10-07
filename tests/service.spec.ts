@@ -5,11 +5,9 @@ import {
   MOCK_DEVELOPER_TOKEN,
   MOCK_OAUTH2_CLIENT,
 } from './test-utils';
-import { ads } from '../src';
+import { services } from '../src';
 
 let service: MockService;
-
-const { GoogleAdsServiceClient } = ads.googleads.v17.services;
 
 beforeAll(async () => {
   service = new MockService({
@@ -22,7 +20,7 @@ describe('Service', () => {
   it('should be able to create a service and load client', async () => {
     const client = service.loadService('GoogleAdsServiceClient');
 
-    expect(client).toBeInstanceOf(GoogleAdsServiceClient);
+    expect(client).toBeInstanceOf(services.GoogleAdsServiceClient);
   });
 
   it('should be loaded from cache', async () => {
@@ -31,8 +29,8 @@ describe('Service', () => {
     const cached = service.getCachedClient('GoogleAdsServiceClient');
 
     await Promise.all([
-      expect(client).toBeInstanceOf(GoogleAdsServiceClient),
-      expect(cached).toBeInstanceOf(GoogleAdsServiceClient),
+      expect(client).toBeInstanceOf(services.GoogleAdsServiceClient),
+      expect(cached).toBeInstanceOf(services.GoogleAdsServiceClient),
     ]);
   });
 
