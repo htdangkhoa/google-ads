@@ -1649,10 +1649,10 @@ ts-proto-descriptors@2.0.0:
   dependencies:
     "@bufbuild/protobuf" "^2.0.0"
 
-ts-proto@^2.2.2:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/ts-proto/-/ts-proto-2.2.2.tgz#1f5cf4312c580937078026b590e1875b7f9f49fa"
-  integrity sha512-wHA6y1W6jyDM/G5GI1DrG84Aqz5UZdKXigSVmTYkauH8fjahag4D16nNvPeXpALJZML0FdgC/F9b4O0NFNZ62Q==
+ts-proto@^2.2.3:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/ts-proto/-/ts-proto-2.2.3.tgz#693714e83e17141af2dd749b07a929a432930010"
+  integrity sha512-sI9qyTcMg7syJjk0CvkRVxZyAuCbpweO2Kq5Dz/JXaRwpaB9ujMHdFF06raXj5nLxDknzV5cUIcdCuUThPXuYg==
   dependencies:
     "@bufbuild/protobuf" "^2.0.0"
     case-anything "^2.1.13"
