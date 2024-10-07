@@ -7,7 +7,8 @@ import {
   VERSION,
   decodePartialFailureError,
   getGoogleAdsError,
-  ads,
+  services,
+  errors,
   rpc,
 } from '../src';
 import {
@@ -22,18 +23,6 @@ import {
   MOCK_MANAGER_ID,
   MOCK_OAUTH2_CLIENT,
 } from './test-utils';
-
-const {
-  services: { GoogleAdsRow },
-  errors: {
-    GoogleAdsFailure,
-    ErrorCode,
-    AuthenticationErrorEnum_AuthenticationError,
-    RequestErrorEnum_RequestError,
-  },
-} = ads.googleads.v17;
-
-const { Status } = rpc;
 
 let service: MockGoogleAds;
 
@@ -66,9 +55,13 @@ describe('search', () => {
   it('should be able to search customer_client', async () => {
     const metadata = new Metadata();
 
-    const { results } = await service
+    const { results } = (await service
       .setCustomerId(MOCK_MANAGER_ID)
-      .mockSearch({ query }, { results: MOCK_CUSTOMER_CLIENTS }, metadata);
+      .mockSearch(
+        { query },
+        { results: MOCK_CUSTOMER_CLIENTS },
+        metadata,
+      )) as services.SearchGoogleAdsResponse;
 
     expect(results).toEqual(MOCK_CUSTOMER_CLIENTS);
   });
@@ -76,12 +69,13 @@ describe('search', () => {
   it('should throw ServiceError', async () => {
     const internalRepr = new Map();
     internalRepr.set(FAILURE_KEY, [
-      GoogleAdsFailure.fromPartial({
+      errors.GoogleAdsFailure.fromPartial({
         errors: [
           {
-            error_code: ErrorCode.fromPartial({
+            error_code: errors.ErrorCode.fromPartial({
               authentication_error:
-                AuthenticationErrorEnum_AuthenticationError.CUSTOMER_NOT_FOUND,
+                errors.AuthenticationErrorEnum_AuthenticationError
+                  .CUSTOMER_NOT_FOUND,
             }),
             message: 'No customer found for the provided customer id.',
           },
@@ -89,7 +83,7 @@ describe('search', () => {
       }),
     ]);
     internalRepr.set('grpc-status-details-bin', [
-      GoogleAdsFailure.fromPartial({
+      errors.GoogleAdsFailure.fromPartial({
         errors: [
           {
             message:
@@ -154,7 +148,7 @@ describe('searchStream', () => {
       .setLinkedCustomerId(MOCK_LINKED_CUSTOMER_ID)
       .mockSearchStream({ query }, { results: MOCK_CAMPAIGNS });
 
-    const campaigns: (typeof GoogleAdsRow)[] = [];
+    const campaigns: services.GoogleAdsRow[] = [];
 
     while (true) {
       const { value, done } = await stream.next();
@@ -185,11 +179,12 @@ describe('mutate', () => {
 
   describe('partial failure', () => {
     it('should decode partial failure errors if present on the response', async () => {
-      const failureMessage = GoogleAdsFailure.fromPartial({
+      const failureMessage = errors.GoogleAdsFailure.fromPartial({
         errors: [
           {
-            error_code: ErrorCode.fromPartial({
-              request_error: RequestErrorEnum_RequestError.BAD_RESOURCE_ID,
+            error_code: errors.ErrorCode.fromPartial({
+              request_error:
+                errors.RequestErrorEnum_RequestError.BAD_RESOURCE_ID,
             }),
             message: 'error message',
             location: {
@@ -204,7 +199,8 @@ describe('mutate', () => {
         ],
       });
 
-      const failureBuffer = GoogleAdsFailure.encode(failureMessage).finish();
+      const failureBuffer =
+        errors.GoogleAdsFailure.encode(failureMessage).finish();
 
       const response = await service
         .setCustomerId(MOCK_CUSTOMER_ID)
@@ -216,7 +212,7 @@ describe('mutate', () => {
           },
           {
             mutate_operation_responses: [],
-            partial_failure_error: Status.fromPartial({
+            partial_failure_error: rpc.Status.fromPartial({
               details: [
                 {
                   type_url: `google.ads.googleads.${VERSION}.errors.GoogleAdsFailure`,
@@ -326,11 +322,12 @@ describe('mutate', () => {
       });
 
       it('should return the errors for partial failure', async () => {
-        const failureMessage = GoogleAdsFailure.fromPartial({
+        const failureMessage = errors.GoogleAdsFailure.fromPartial({
           errors: [
             {
-              error_code: ErrorCode.fromPartial({
-                request_error: RequestErrorEnum_RequestError.BAD_RESOURCE_ID,
+              error_code: errors.ErrorCode.fromPartial({
+                request_error:
+                  errors.RequestErrorEnum_RequestError.BAD_RESOURCE_ID,
               }),
               message: 'error message',
               location: {
@@ -345,7 +342,8 @@ describe('mutate', () => {
           ],
         });
 
-        const failureBuffer = GoogleAdsFailure.encode(failureMessage).finish();
+        const failureBuffer =
+          errors.GoogleAdsFailure.encode(failureMessage).finish();
 
         const response = await service
           .setCustomerId(MOCK_CUSTOMER_ID)
@@ -357,7 +355,7 @@ describe('mutate', () => {
             },
             {
               mutate_operation_responses: [],
-              partial_failure_error: Status.fromPartial({
+              partial_failure_error: rpc.Status.fromPartial({
                 details: [
                   {
                     type_url: `google.ads.googleads.${VERSION}.errors.GoogleAdsFailure`,
