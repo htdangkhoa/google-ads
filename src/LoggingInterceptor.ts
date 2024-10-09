@@ -243,7 +243,7 @@ export class LoggingInterceptor {
         const [googleAdsError] = errors ?? [];
 
         const [errorType, errorCode] =
-          Object.entries<any>(googleAdsError.error_code ?? {}).find(
+          Object.entries<any>(googleAdsError?.error_code ?? {}).find(
             ([key, value]) => ![undefined, null].includes(value),
           ) ?? [];
 
