@@ -30,17 +30,17 @@ async function main() {
     },
   );
 
-  const { results: customerClients } = await googleAdsService.search({
-    query: new QueryBuilder()
-      .select(
-        'customer_client.resource_name',
-        'customer_client.client_customer',
-        'customer_client.level',
-        'customer_client.hidden',
-      )
-      .from('customer_client')
-      .build(),
-  });
+  const query = new QueryBuilder()
+    .select(
+      'customer_client.resource_name',
+      'customer_client.client_customer',
+      'customer_client.level',
+      'customer_client.hidden',
+    )
+    .from('customer_client')
+    .build();
+
+  const { results: customerClients } = await googleAdsService.search({ query });
 
   const customer_client = customerClients!
     .find(

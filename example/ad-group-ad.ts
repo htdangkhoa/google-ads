@@ -1,11 +1,6 @@
 import { google } from 'googleapis';
 
-import { GoogleAds, ads, MessageType } from '../src';
-
-const {
-  common: { AdTextAsset },
-  enums: { AdGroupAdStatusEnum_AdGroupAdStatus },
-} = ads.googleads.v17;
+import { GoogleAds, common, enums } from '../src';
 
 const authClient = new google.auth.JWT({
   keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
@@ -17,8 +12,8 @@ export async function createAdGroupAdApp(
   customer_id: string,
   login_customer_id: string,
   ad_group_resource: string,
-  headlines: MessageType<typeof AdTextAsset>[],
-  descriptions: MessageType<typeof AdTextAsset>[],
+  headlines: common.AdTextAsset[],
+  descriptions: common.AdTextAsset[],
 ) {
   const service = new GoogleAds(
     {
@@ -53,7 +48,7 @@ export async function createAdGroupAdApp(
                 ],
               },
             },
-            status: AdGroupAdStatusEnum_AdGroupAdStatus.PAUSED,
+            status: enums.AdGroupAdStatusEnum_AdGroupAdStatus.PAUSED,
           },
         },
       },
