@@ -247,7 +247,7 @@ export class LoggingInterceptor {
             ([key, value]) => ![undefined, null].includes(value),
           ) ?? [];
 
-        const errorMessage = googleAdsError.message;
+        const errorMessage = googleAdsError?.message ?? responseStatus!.details;
 
         messages.push(
           `Body: ${errorMessage}`,
