@@ -252,9 +252,14 @@ export class LoggingInterceptor {
         messages.push(
           `Body: ${errorMessage}`,
           `ResponseCode: ${responseStatus.code}`,
-          `ErrorCode: ${errorCode} (${errorType})`,
-          `FailureMessage: ${responseStatus!.details}`,
         );
+
+        if (errorCode && errorType) {
+          messages.push(`ErrorCode: ${errorCode} (${errorType})`);
+        }
+
+        messages.push(`FailureMessage: ${responseStatus!.details}`);
+
         this.detailLogger.info(messages.join('\n'));
       } else {
         messages.push(
