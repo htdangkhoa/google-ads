@@ -67,7 +67,7 @@
     "fast-glob": "^3.3.2",
     "googleapis": "^144.0.0",
     "ts-node": "^10.9.2",
-    "ts-proto": "^2.2.3",
+    "ts-proto": "^2.2.4",
     "typescript": "5.6.3",
     "vitest": "^2.1.2"
   },
