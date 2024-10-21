@@ -10,7 +10,7 @@ import {
   SearchGoogleAdsStreamResponse,
   MutateGoogleAdsRequest,
   MutateGoogleAdsResponse,
-} from './generated/google/ads/googleads/v17/services/google_ads_service.js';
+} from './generated/google/ads/googleads/v18/services/google_ads_service.js';
 import { Service } from './Service.js';
 import { CustomerOptions, ServiceOptions } from './types.js';
 
