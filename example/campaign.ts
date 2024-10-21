@@ -1,6 +1,6 @@
 import { google } from 'googleapis';
 
-import { GoogleAds } from '../src';
+import { GoogleAds, QueryBuilder } from '../src';
 
 const authClient = new google.auth.JWT({
   keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
@@ -20,17 +20,18 @@ export function getCampaigns(customer_id: string, login_customer_id: string) {
     },
   );
 
-  return service.search({
-    query: `
-      SELECT
-        campaign.id,
-        campaign.name,
-        campaign.status,
-        campaign.start_date,
-        campaign.end_date,
-        campaign.serving_status,
-        campaign.resource_name
-      FROM campaign
-    `,
-  });
+  const query = new QueryBuilder()
+    .select(
+      'campaign.id',
+      'campaign.name',
+      'campaign.status',
+      'campaign.start_date',
+      'campaign.end_date',
+      'campaign.serving_status',
+      'campaign.resource_name',
+    )
+    .from('campaign')
+    .build();
+
+  return service.search({ query });
 }

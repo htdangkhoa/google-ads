@@ -1,10 +1,6 @@
 import { google } from 'googleapis';
 
-import { GoogleAds, ads } from '../src';
-
-const {
-  enums: { AdGroupStatusEnum_AdGroupStatus, AdGroupTypeEnum_AdGroupType },
-} = ads.googleads.v17;
+import { GoogleAds, enums } from '../src';
 
 const authClient = new google.auth.JWT({
   keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
@@ -35,9 +31,9 @@ export async function createAdGroup(
         ad_group_operation: {
           create: {
             name,
-            status: AdGroupStatusEnum_AdGroupStatus.PAUSED,
+            status: enums.AdGroupStatusEnum_AdGroupStatus.PAUSED,
             campaign: campaign_resource,
-            type: AdGroupTypeEnum_AdGroupType.SEARCH_STANDARD,
+            type: enums.AdGroupTypeEnum_AdGroupType.SEARCH_STANDARD,
           },
         },
       },
