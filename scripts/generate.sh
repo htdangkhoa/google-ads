@@ -5,7 +5,7 @@ version=$1
 type=$2 # optional, can be 'commonjs' or 'esm'. Default is 'esm'
 
 if [ -z "$version" ]; then
-    echo "Version is required! Usage: generate.sh v17"
+    echo "Version is required! Usage: generate.sh v18"
     exit 1
 fi
 
