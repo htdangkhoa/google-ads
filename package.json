@@ -36,6 +36,12 @@
       "require": "./dist/cjs/index.js",
       "default": "./dist/esm/index.js",
       "types": "./dist/types/index.d.ts"
+    },
+    "./GoogleAds": {
+      "import": "./dist/esm/GoogleAds.js",
+      "require": "./dist/cjs/GoogleAds.js",
+      "default": "./dist/esm/GoogleAds.js",
+      "types": "./dist/types/GoogleAds.d.ts"
     }
   },
   "main": "./dist/cjs/index.js",
@@ -57,7 +63,8 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.12.2",
     "deepmerge": "^4.3.1",
-    "log4js": "^6.9.1"
+    "log4js": "^6.9.1",
+    "long": "^5.2.3"
   },
   "devDependencies": {
     "@types/node": "^22.7.7",
