@@ -61,10 +61,10 @@
     "generate": "./scripts/generate.sh"
   },
   "dependencies": {
-    "@grpc/grpc-js": "^1.12.2",
+    "@grpc/grpc-js": "^1.12.6",
     "deepmerge": "^4.3.1",
     "log4js": "^6.9.1",
-    "long": "^5.2.3"
+    "long": "^5.3.1"
   },
   "devDependencies": {
     "@types/node": "^22.7.7",
