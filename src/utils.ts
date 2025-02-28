@@ -1,7 +1,7 @@
 import { credentials, OAuth2Client, ServiceError } from '@grpc/grpc-js';
 
-import { GoogleAdsFailure } from './generated/google/ads/googleads/v18/errors/errors.js';
-import { MutateGoogleAdsResponse } from './generated/google/ads/googleads/v18/services/google_ads_service.js';
+import { GoogleAdsFailure } from './generated/google/ads/googleads/v19/errors/errors.js';
+import { MutateGoogleAdsResponse } from './generated/google/ads/googleads/v19/services/google_ads_service.js';
 import { FAILURE_KEY } from './constants.js';
 
 export const getCredentials = (authClient: OAuth2Client) => {
