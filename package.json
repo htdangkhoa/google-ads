@@ -65,7 +65,7 @@
     "long": "^5.3.2"
   },
   "devDependencies": {
-    "@types/node": "^22.14.1",
+    "@types/node": "^22.15.2",
     "@vitest/coverage-v8": "^3.1.1",
     "coveralls-next": "^4.2.0",
     "fast-glob": "^3.3.3",
