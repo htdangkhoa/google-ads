@@ -298,6 +298,9 @@ See more at [Node.js gRPC Library](https://grpc.github.io/grpc/node/module-src_c
 
 ## Development
 
+> [!WARNING]  
+> This library is using `ts-proto` to generate the gRPC client. Since v2, `ts-proto` has changed the way to encode the request for image upload. Don't migrate to `ts-proto` v2 or higher until the issue is fixed.
+
 ### Prerequisites
 
 - Protocol Buffer Compiler (protoc) version 3.0.0 or greater. The latest version can be downloaded from [here](https://grpc.io/docs/protoc-installation/)

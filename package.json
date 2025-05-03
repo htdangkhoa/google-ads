@@ -59,21 +59,21 @@
     "generate": "./scripts/generate.sh"
   },
   "dependencies": {
-    "@grpc/grpc-js": "^1.13.3",
-    "deepmerge": "^4.3.1",
-    "log4js": "^6.9.1",
-    "long": "^5.3.2"
+    "@grpc/grpc-js": "1.13.3",
+    "deepmerge": "4.3.1",
+    "log4js": "6.9.1",
+    "long": "5.3.2"
   },
   "devDependencies": {
-    "@types/node": "^22.14.1",
-    "@vitest/coverage-v8": "^3.1.1",
-    "coveralls-next": "^4.2.0",
-    "fast-glob": "^3.3.3",
-    "googleapis": "^148.0.0",
-    "ts-node": "^10.9.2",
-    "ts-proto": "2.7.0",
+    "@types/node": "22.15.3",
+    "@vitest/coverage-v8": "3.1.2",
+    "coveralls-next": "4.2.1",
+    "fast-glob": "3.3.3",
+    "googleapis": "148.0.0",
+    "ts-node": "10.9.2",
+    "ts-proto": "1.181.2",
     "typescript": "5.8.3",
-    "vitest": "^3.1.1"
+    "vitest": "3.1.2"
   },
   "publishConfig": {
     "access": "public",
