@@ -17,7 +17,7 @@ import type { Logger } from 'log4js';
 import { HOST } from './constants.js';
 import { LoggingOptions } from './types.js';
 import { getGoogleAdsError } from './utils.js';
-import { GoogleAdsFailure } from './generated/google/ads/googleads/v19/errors/errors.js';
+import { GoogleAdsFailure } from './generated/google/ads/googleads/v20/errors/errors.js';
 
 const cleanEmpty = function (obj: any, defaults = [undefined, null]): any {
   if (defaults.includes(obj)) return;

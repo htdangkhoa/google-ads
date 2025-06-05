@@ -5,7 +5,7 @@ import {
   CustomerServiceClient,
   ListAccessibleCustomersRequest,
   ListAccessibleCustomersResponse,
-} from './generated/google/ads/googleads/v19/services/customer_service.js';
+} from './generated/google/ads/googleads/v20/services/customer_service.js';
 import { Service } from './Service.js';
 
 export class Customer extends Service {
