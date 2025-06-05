@@ -1,8 +1,8 @@
 <h1 align="center">Google Ads API Nodejs Client Library</h1>
 
 <p align="center">
-  <a href="https://developers.google.com/google-ads/api/docs/release-notes#v19_2025-02-26">
-    <img src="https://img.shields.io/badge/google%20ads-v19%202025--02--26-009688.svg?style=flat-square">
+  <a href="https://developers.google.com/google-ads/api/docs/release-notes#v20_2025-06-04">
+    <img src="https://img.shields.io/badge/google%20ads-v20%202025--06--04-009688.svg?style=flat-square">
   </a>
   <a href="https://www.npmjs.com/package/@htdangkhoa/google-ads">
     <img src="https://img.shields.io/npm/v/@htdangkhoa/google-ads.svg?style=flat-square">
@@ -298,6 +298,9 @@ See more at [Node.js gRPC Library](https://grpc.github.io/grpc/node/module-src_c
 
 ## Development
 
+> [!WARNING]  
+> This library is using `ts-proto` to generate the gRPC client. Since v2, `ts-proto` has changed the way to encode the request for image upload. Don't migrate to `ts-proto` v2 or higher until the issue is fixed.
+
 ### Prerequisites
 
 - Protocol Buffer Compiler (protoc) version 3.0.0 or greater. The latest version can be downloaded from [here](https://grpc.io/docs/protoc-installation/)
@@ -317,7 +320,7 @@ See more at [Node.js gRPC Library](https://grpc.github.io/grpc/node/module-src_c
     yarn generate <GOOGLE_ADS_API_VERSION>
 
     # example
-    yarn generate v19
+    yarn generate v20
     ```
 3. Make sure the version number in the `src` folder is correct (it should match the version number you passed to the `generate` command)
 
@@ -334,6 +337,25 @@ See more at [Node.js gRPC Library](https://grpc.github.io/grpc/node/module-src_c
     ```
 
 6. Make a pull request, get it approved and merged into `main`
+
+## Known Issues
+
+- With `ImageAsset`, you might get an error if you provide it as either `Uint8Array` or `Buffer`. The root cause is that the proto is `bytes` but the generator is generating to `Buffer/Uint8Array` which is the wrong type ([#166](https://github.com/htdangkhoa/google-ads/issues/166#issuecomment-2851472905)). The solution is to convert it to base64 string as shown below:
+
+  ```ts
+  const imageAsset = ImageAsset.create({
+    // @ts-expect-error
+    data: Buffer.from(asset.file.buffer).toString('base64'),
+  });
+
+  // or
+
+  const imageAsset: ImageAsset = {
+    // @ts-expect-error
+    data: Buffer.from(asset.file.buffer).toString('base64'),
+  };
+  ```
+  Reference: https://developers.google.com/google-ads/api/rest/reference/rest/latest/Asset#imageasset
 
 ## License
 The code in this project is released under the [MIT License](LICENSE).
