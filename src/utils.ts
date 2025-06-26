@@ -1,4 +1,9 @@
-import { credentials, OAuth2Client, ServiceError } from '@grpc/grpc-js';
+import {
+  credentials,
+  OAuth2Client,
+  ServiceError,
+  Metadata,
+} from '@grpc/grpc-js';
 
 import { GoogleAdsFailure } from './generated/google/ads/googleads/v20/errors/errors.js';
 import { MutateGoogleAdsResponse } from './generated/google/ads/googleads/v20/services/google_ads_service.js';
@@ -7,7 +12,35 @@ import { FAILURE_KEY } from './constants.js';
 export const getCredentials = (authClient: OAuth2Client) => {
   const ssl = credentials.createSsl();
 
-  const callCredentials = credentials.createFromGoogleCredential(authClient);
+  const callCredentials = credentials.createFromMetadataGenerator(
+    ({ service_url }, callback) => {
+      (authClient as any)
+        .getRequestHeaders(service_url)
+        .then((requestHeaders) => {
+          const metadata = new Metadata();
+
+          let headers = requestHeaders;
+
+          if (globalThis.Headers || global.Headers) {
+            const headerEntries = Object.fromEntries(headers);
+            headers = Object.entries(headerEntries).reduce(
+              (acc, [key, value]) => {
+                acc[key] = value;
+                return acc;
+              },
+              {} as Record<string, string>,
+            );
+          }
+
+          Object.entries<string>(headers).forEach(([key, value]) => {
+            metadata.set(key, value);
+          });
+
+          callback(null, metadata);
+        })
+        .catch((err) => callback(err));
+    },
+  );
 
   const channelCredentials = credentials.combineChannelCredentials(
     ssl,
