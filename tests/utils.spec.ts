@@ -113,10 +113,14 @@ describe('getCredentials', () => {
       );
     });
 
-    it('should handle Headers global object if present', async () => {
-      // Mock Headers global object
-      const originalHeaders = globalThis.Headers;
-      globalThis.Headers = class Headers {} as any;
+    it('should handle when both globalThis.Headers and global.Headers are undefined', async () => {
+      // Store original Headers objects
+      const originalGlobalThisHeaders = globalThis.Headers;
+      const originalGlobalHeaders = (global as any).Headers;
+      
+      // Make sure both Headers are not defined
+      delete globalThis.Headers;
+      delete (global as any).Headers;
 
       try {
         metadataGenerator({ service_url: 'https://example.com' }, callback);
@@ -132,10 +136,119 @@ describe('getCredentials', () => {
         );
       } finally {
         // Restore original Headers
-        if (originalHeaders) {
-          globalThis.Headers = originalHeaders;
+        if (originalGlobalThisHeaders) {
+          globalThis.Headers = originalGlobalThisHeaders;
+        }
+        
+        if (originalGlobalHeaders) {
+          (global as any).Headers = originalGlobalHeaders;
+        }
+      }
+    });
+
+    it('should handle Headers global object if present in globalThis', async () => {
+      // Store original Headers objects
+      const originalGlobalThisHeaders = globalThis.Headers;
+      const originalGlobalHeaders = (global as any).Headers;
+      
+      // Set up test condition: only globalThis.Headers exists
+      globalThis.Headers = class Headers {} as any;
+      delete (global as any).Headers;
+
+      try {
+        metadataGenerator({ service_url: 'https://example.com' }, callback);
+        // Wait for the promise to resolve
+        await new Promise(process.nextTick);
+        expect(callback).toHaveBeenCalledWith(
+          null,
+          expect.objectContaining({
+            set: expect.any(Function),
+            get: expect.any(Function),
+            getMap: expect.any(Function),
+          }),
+        );
+      } finally {
+        // Restore original Headers
+        if (originalGlobalThisHeaders) {
+          globalThis.Headers = originalGlobalThisHeaders;
         } else {
           delete globalThis.Headers;
+        }
+        
+        if (originalGlobalHeaders) {
+          (global as any).Headers = originalGlobalHeaders;
+        }
+      }
+    });
+
+    it('should handle Headers global object if present in global', async () => {
+      // Store original Headers objects
+      const originalGlobalThisHeaders = globalThis.Headers;
+      const originalGlobalHeaders = (global as any).Headers;
+      
+      // Set up test condition: only global.Headers exists
+      delete globalThis.Headers;
+      (global as any).Headers = class Headers {};
+
+      try {
+        metadataGenerator({ service_url: 'https://example.com' }, callback);
+        // Wait for the promise to resolve
+        await new Promise(process.nextTick);
+        expect(callback).toHaveBeenCalledWith(
+          null,
+          expect.objectContaining({
+            set: expect.any(Function),
+            get: expect.any(Function),
+            getMap: expect.any(Function),
+          }),
+        );
+      } finally {
+        // Restore original Headers
+        if (originalGlobalThisHeaders) {
+          globalThis.Headers = originalGlobalThisHeaders;
+        }
+
+        if (originalGlobalHeaders) {
+          (global as any).Headers = originalGlobalHeaders;
+        } else {
+          delete (global as any).Headers;
+        }
+      }
+    });
+    
+    it('should handle when both globalThis.Headers and global.Headers are defined', async () => {
+      // Store original Headers objects
+      const originalGlobalThisHeaders = globalThis.Headers;
+      const originalGlobalHeaders = (global as any).Headers;
+      
+      // Set up test condition: both Headers exist
+      globalThis.Headers = class GlobalThisHeaders {} as any;
+      (global as any).Headers = class GlobalHeaders {};
+
+      try {
+        metadataGenerator({ service_url: 'https://example.com' }, callback);
+        // Wait for the promise to resolve
+        await new Promise(process.nextTick);
+        expect(callback).toHaveBeenCalledWith(
+          null,
+          expect.objectContaining({
+            set: expect.any(Function),
+            get: expect.any(Function),
+            getMap: expect.any(Function),
+          }),
+        );
+      } finally {
+        // Restore original Headers
+        if (originalGlobalThisHeaders) {
+          globalThis.Headers = originalGlobalThisHeaders;
+        } else {
+          delete globalThis.Headers;
+        }
+        
+        if (originalGlobalHeaders) {
+          (global as any).Headers = originalGlobalHeaders;
+        } else {
+          delete (global as any).Headers;
         }
       }
     });
