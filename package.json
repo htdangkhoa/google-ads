@@ -65,15 +65,15 @@
     "long": "5.3.2"
   },
   "devDependencies": {
-    "@types/node": "22.15.29",
-    "@vitest/coverage-v8": "3.2.2",
-    "coveralls-next": "4.2.1",
+    "@types/node": "24.2.1",
+    "@vitest/coverage-v8": "3.2.4",
+    "coveralls-next": "5.0.0",
     "fast-glob": "3.3.3",
-    "googleapis": "150.0.1",
+    "googleapis": "155.0.1",
     "ts-node": "10.9.2",
     "ts-proto": "1.181.2",
-    "typescript": "5.8.3",
-    "vitest": "3.2.2"
+    "typescript": "5.9.2",
+    "vitest": "3.2.4"
   },
   "publishConfig": {
     "access": "public",
