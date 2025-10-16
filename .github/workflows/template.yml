@@ -3,24 +3,24 @@ name: Generate google ads api
 on:
   workflow_call:
     inputs:
-      node-version:
-        description: 'The node version to use'
-        required: true
-        type: string
       google-ads-api-version:
         description: 'The google ads api version to use'
         required: true
         type: string
+      node-version:
+        description: 'The node version to use'
+        required: false
+        type: string
+        default: 24
       test:
         description: 'Whether to test'
         required: false
         type: boolean
         default: false
-      build:
-        description: 'Whether to build the bundle'
+      artifact-name:
+        description: 'The name of the artifact to upload'
         required: false
-        type: boolean
-        default: false
+        type: string
       import-suffix:
         description: 'ts-proto will emit file imports using the specified suffix'
         required: false
@@ -32,7 +32,7 @@ jobs:
     name: Generate google ads api ${{ inputs.google-ads-api-version }} for Node ${{ inputs.node-version }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install protobuf-compiler
         run: |
@@ -40,7 +40,7 @@ jobs:
           sudo apt-get install protobuf-compiler -y
 
       - name: Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ inputs.node-version }}
           cache: 'yarn'
@@ -69,12 +69,12 @@ jobs:
           parallel: true
 
       - name: Build
-        if: ${{ inputs.build }}
+        if: ${{ inputs.artifact-name }}
         run: yarn build
 
       - name: Create build artifact
-        if: ${{ inputs.build }}
+        if: ${{ inputs.artifact-name }}
         uses: actions/upload-artifact@v4
         with:
-          name: build ${{ inputs.node-version }}
+          name: ${{ inputs.artifact-name }}
           path: dist

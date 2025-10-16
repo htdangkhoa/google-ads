@@ -6,6 +6,14 @@ on:
     tags:
       - v*
 
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  # it should be the tag name without the v prefix
+  ARTIFACT_NAME: ${{ github.ref_name }}
+
 jobs:
   export-google-ads-api-version:
     uses: ./.github/workflows/export-google-ads-api-version.yml
@@ -17,10 +25,9 @@ jobs:
     needs: export-google-ads-api-version
     uses: ./.github/workflows/template.yml
     with:
-      node-version: 22
       google-ads-api-version: ${{ needs.export-google-ads-api-version.outputs.google-ads-api-version }}
       test: false
-      build: true
+      artifact-name: ${{ env.ARTIFACT_NAME }}
       import-suffix: .js
 
   publish:
@@ -30,18 +37,18 @@ jobs:
     environment: production
     permissions: write-all
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Download build artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
-          name: build 22
+          name: ${{ env.ARTIFACT_NAME }}
           path: dist
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 'lts/*'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Publish
