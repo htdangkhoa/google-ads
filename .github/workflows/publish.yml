@@ -52,8 +52,6 @@ jobs:
         run: |
           npm version ${GITHUB_REF#refs/tags/v} --no-git-tag-version
           npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Release
         uses: softprops/action-gh-release@v2
