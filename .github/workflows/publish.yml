@@ -6,6 +6,10 @@ on:
     tags:
       - v*
 
+permissions:
+  id-token: write
+  contents: read
+
 env:
   # it should be the tag name without the v prefix
   ARTIFACT_NAME: ${{ github.ref_name }}
