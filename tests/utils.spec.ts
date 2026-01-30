@@ -10,6 +10,21 @@ type MockOAuth2Client = OAuth2Client & {
 // Mock the grpc-js credentials
 vi.mock('@grpc/grpc-js', async () => {
   const actual = await vi.importActual('@grpc/grpc-js');
+
+  // Use a class instead of arrow function for Metadata mock (Vitest 4.0 requirement)
+  class MockMetadata {
+    private store = new Map<string, string>();
+    set(key: string, value: string) {
+      this.store.set(key, value);
+    }
+    get(key: string) {
+      return this.store.get(key);
+    }
+    getMap() {
+      return this.store;
+    }
+  }
+
   return {
     ...(actual as any),
     credentials: {
@@ -28,14 +43,7 @@ vi.mock('@grpc/grpc-js', async () => {
         };
       }),
     },
-    Metadata: vi.fn().mockImplementation(() => {
-      const store = new Map();
-      return {
-        set: (key, value) => store.set(key, value),
-        get: (key) => store.get(key),
-        getMap: () => store,
-      };
-    }),
+    Metadata: MockMetadata,
   };
 });
 

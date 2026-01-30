@@ -59,21 +59,21 @@
     "generate": "./scripts/generate.sh"
   },
   "dependencies": {
-    "@grpc/grpc-js": "1.14.0",
+    "@grpc/grpc-js": "1.14.3",
     "deepmerge": "4.3.1",
     "log4js": "6.9.1",
     "long": "5.3.2"
   },
   "devDependencies": {
-    "@types/node": "24.7.2",
-    "@vitest/coverage-v8": "3.2.4",
-    "coveralls-next": "5.0.0",
+    "@types/node": "25.1.0",
+    "@vitest/coverage-v8": "4.0.18",
+    "coveralls-next": "6.0.1",
     "fast-glob": "3.3.3",
-    "googleapis": "163.0.0",
+    "googleapis": "171.0.0",
     "ts-node": "10.9.2",
     "ts-proto": "1.181.2",
     "typescript": "5.9.3",
-    "vitest": "3.2.4"
+    "vitest": "4.0.18"
   },
   "publishConfig": {
     "access": "public",
