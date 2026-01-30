@@ -125,7 +125,7 @@ describe('getCredentials', () => {
       // Store original Headers objects
       const originalGlobalThisHeaders = globalThis.Headers;
       const originalGlobalHeaders = (global as any).Headers;
-      
+
       // Make sure both Headers are not defined
       delete globalThis.Headers;
       delete (global as any).Headers;
@@ -147,7 +147,7 @@ describe('getCredentials', () => {
         if (originalGlobalThisHeaders) {
           globalThis.Headers = originalGlobalThisHeaders;
         }
-        
+
         if (originalGlobalHeaders) {
           (global as any).Headers = originalGlobalHeaders;
         }
@@ -158,7 +158,7 @@ describe('getCredentials', () => {
       // Store original Headers objects
       const originalGlobalThisHeaders = globalThis.Headers;
       const originalGlobalHeaders = (global as any).Headers;
-      
+
       // Set up test condition: only globalThis.Headers exists
       globalThis.Headers = class Headers {} as any;
       delete (global as any).Headers;
@@ -182,7 +182,7 @@ describe('getCredentials', () => {
         } else {
           delete globalThis.Headers;
         }
-        
+
         if (originalGlobalHeaders) {
           (global as any).Headers = originalGlobalHeaders;
         }
@@ -193,7 +193,7 @@ describe('getCredentials', () => {
       // Store original Headers objects
       const originalGlobalThisHeaders = globalThis.Headers;
       const originalGlobalHeaders = (global as any).Headers;
-      
+
       // Set up test condition: only global.Headers exists
       delete globalThis.Headers;
       (global as any).Headers = class Headers {};
@@ -223,12 +223,12 @@ describe('getCredentials', () => {
         }
       }
     });
-    
+
     it('should handle when both globalThis.Headers and global.Headers are defined', async () => {
       // Store original Headers objects
       const originalGlobalThisHeaders = globalThis.Headers;
       const originalGlobalHeaders = (global as any).Headers;
-      
+
       // Set up test condition: both Headers exist
       globalThis.Headers = class GlobalThisHeaders {} as any;
       (global as any).Headers = class GlobalHeaders {};
@@ -252,7 +252,7 @@ describe('getCredentials', () => {
         } else {
           delete globalThis.Headers;
         }
-        
+
         if (originalGlobalHeaders) {
           (global as any).Headers = originalGlobalHeaders;
         } else {
