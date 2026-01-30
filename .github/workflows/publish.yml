@@ -9,10 +9,7 @@ on:
 permissions:
   id-token: write
   contents: read
-
-env:
-  # it should be the tag name without the v prefix
-  ARTIFACT_NAME: ${{ github.ref_name }}
+  deployments: write
 
 jobs:
   export-google-ads-api-version:
@@ -27,7 +24,7 @@ jobs:
     with:
       google-ads-api-version: ${{ needs.export-google-ads-api-version.outputs.google-ads-api-version }}
       test: false
-      artifact-name: ${{ env.ARTIFACT_NAME }}
+      artifact-name: ${{ github.ref_name }}
       import-suffix: .js
 
   publish:
@@ -42,7 +39,7 @@ jobs:
       - name: Download build artifact
         uses: actions/download-artifact@v5
         with:
-          name: ${{ env.ARTIFACT_NAME }}
+          name: ${{ github.ref_name }}
           path: dist
 
       - name: Setup Node
