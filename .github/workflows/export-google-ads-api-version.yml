@@ -16,7 +16,9 @@ jobs:
   export-google-ads-api-version:
     name: Export google ads api version
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}
+    environment:
+      name: ${{ inputs.environment }}
+      deployment: false
     outputs:
       GOOGLE_ADS_API_VERSION: ${{ steps.export.outputs.GOOGLE_ADS_API_VERSION }}
     steps:
