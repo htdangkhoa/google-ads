@@ -1,5 +1,5 @@
 import { credentials, Metadata, ServiceError } from '@grpc/grpc-js';
-import { google } from 'googleapis';
+import { JWT } from 'google-auth-library';
 
 import { Customer, GoogleAds, Service, enums, services } from '../src';
 
@@ -9,7 +9,7 @@ export const MOCK_ADDRESS = 'googleads.googleapis.com';
 
 export const MOCK_CREDENTIALS = credentials.createInsecure();
 
-export const MOCK_OAUTH2_CLIENT = new google.auth.JWT({
+export const MOCK_OAUTH2_CLIENT = new JWT({
   keyFile: 'MOCK KEY FILE',
   subject: 'MOCK SUBJECT',
   scopes: ['https://www.googleapis.com/auth/adwords'],

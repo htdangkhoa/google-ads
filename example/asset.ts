@@ -1,8 +1,8 @@
-import { google } from 'googleapis';
+import { JWT } from 'google-auth-library';
 
 import { GoogleAds, resources, services } from '../src';
 
-const authClient = new google.auth.JWT({
+const authClient = new JWT({
   keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
   subject: process.env.GOOGLE_ADS_EMAIL,
   scopes: ['https://www.googleapis.com/auth/adwords'],
@@ -15,7 +15,7 @@ export async function uploadAsset(
 ) {
   const service = new GoogleAds(
     {
-      auth: authClient,
+      auth: authClient as any,
       developer_token: process.env.DEVELOPER_TOKEN!,
     },
     {

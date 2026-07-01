@@ -1,7 +1,7 @@
-import { google } from 'googleapis';
+import { JWT } from 'google-auth-library';
 import { Customer, GoogleAds, QueryBuilder } from '../src';
 
-const authClient = new google.auth.JWT({
+const authClient = new JWT({
   keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
   subject: process.env.GOOGLE_ADS_EMAIL,
   scopes: ['https://www.googleapis.com/auth/adwords'],
@@ -11,7 +11,7 @@ const developer_token = process.env.DEVELOPER_TOKEN!;
 
 async function main() {
   const service = new Customer({
-    auth: authClient,
+    auth: authClient as any,
     developer_token,
   });
 
@@ -22,7 +22,7 @@ async function main() {
 
   const googleAdsService = new GoogleAds(
     {
-      auth: authClient,
+      auth: authClient as any,
       developer_token,
     },
     {
