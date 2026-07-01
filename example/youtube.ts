@@ -1,15 +1,16 @@
 import * as fs from 'fs';
 import { PassThrough, Readable } from 'stream';
+import { JWT } from 'google-auth-library';
 import { google } from 'googleapis';
 import { GoogleAds, enums } from '../src';
 
-const authClient = new google.auth.JWT({
+const authClient = new JWT({
   keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
   subject: '<YOUR_EMAIL>',
   scopes: ['https://www.googleapis.com/auth/youtube'],
 });
 
-const yt = google.youtube({ version: 'v3', auth: authClient });
+const yt = google.youtube({ version: 'v3', auth: authClient as any });
 
 function upload(stream: Readable) {
   return yt.videos.insert({
@@ -49,7 +50,7 @@ async function main(customer_id: string, login_customer_id: string) {
   const imageBase64 = Buffer.from(imageBuffer).toString('base64');
 
   const service = new GoogleAds({
-    auth: authClient,
+    auth: authClient as any,
     developer_token: process.env.DEVELOPER_TOKEN!,
   });
 
