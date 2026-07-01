@@ -1,8 +1,8 @@
 <h1 align="center">Google Ads API Nodejs Client Library</h1>
 
 <p align="center">
-  <a href="https://developers.google.com/google-ads/api/docs/release-notes#v24-1-2026-05-13">
-    <img src="https://img.shields.io/badge/google%20ads-v24.1%202026--05--13-009688.svg?style=flat-square">
+  <a href="https://developers.google.com/google-ads/api/docs/release-notes#v24-2-2026-06-24">
+    <img src="https://img.shields.io/badge/google%20ads-v24.2%202026--06--24-009688.svg?style=flat-square">
   </a>
   <a href="https://www.npmjs.com/package/@htdangkhoa/google-ads">
     <img src="https://img.shields.io/npm/v/@htdangkhoa/google-ads.svg?style=flat-square">
