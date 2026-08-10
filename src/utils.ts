@@ -5,8 +5,8 @@ import {
   Metadata,
 } from '@grpc/grpc-js';
 
-import { GoogleAdsFailure } from './generated/google/ads/googleads/v24/errors/errors.js';
-import { MutateGoogleAdsResponse } from './generated/google/ads/googleads/v24/services/google_ads_service.js';
+import { GoogleAdsFailure } from './generated/google/ads/googleads/v25/errors/errors.js';
+import { MutateGoogleAdsResponse } from './generated/google/ads/googleads/v25/services/google_ads_service.js';
 import { FAILURE_KEY } from './constants.js';
 
 export const getCredentials = (authClient: OAuth2Client) => {
