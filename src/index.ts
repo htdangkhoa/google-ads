@@ -1,8 +1,8 @@
-export * as enums from './generated/index.google.ads.googleads.v25.enums.js';
-export * as common from './generated/index.google.ads.googleads.v25.common.js';
-export * as errors from './generated/index.google.ads.googleads.v25.errors.js';
-export * as resources from './generated/index.google.ads.googleads.v25.resources.js';
-export * as services from './generated/index.google.ads.googleads.v25.services.js';
+export * as enums from './generated/index.google.ads.googleads.v26.enums.js';
+export * as common from './generated/index.google.ads.googleads.v26.common.js';
+export * as errors from './generated/index.google.ads.googleads.v26.errors.js';
+export * as resources from './generated/index.google.ads.googleads.v26.resources.js';
+export * as services from './generated/index.google.ads.googleads.v26.services.js';
 export * as rpc from './generated/index.google.rpc.js';
 export * from './constants.js';
 export * from './Customer.js';
