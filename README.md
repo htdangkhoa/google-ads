@@ -304,7 +304,7 @@ See more at [Node.js gRPC Library](https://grpc.github.io/grpc/node/module-src_c
 ### Prerequisites
 
 - Protocol Buffer Compiler (protoc) version 3.0.0 or greater. The latest version can be downloaded from [here](https://grpc.io/docs/protoc-installation/)
-- Node.js version 16 or greater (LTS recommended) and npm version 8 or greater. The latest version of Node.js can be downloaded from [here](https://nodejs.org/en/download/)
+- Node.js version 22 or greater (LTS recommended) and npm version 10 or greater. The latest version of Node.js can be downloaded from [here](https://nodejs.org/en/download/)
 
 ### Building
 
